@@ -5,7 +5,10 @@ import registerServiceWorker from './registerServiceWorker';
 import Router from "./Router";
 import {BrowserRouter} from "react-router-dom";
 import {StyleRoot} from "radium";
+import {themer} from 'ic-snacks';
+import {theme} from './theme'
 
+themer.themeConfig = theme; //IC-Snacks theme for WeMart
 
 ReactDOM.render(
     <StyleRoot>
