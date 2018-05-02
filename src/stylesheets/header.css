@@ -1,0 +1,10 @@
+.header {
+    background-color: #2f3a49;
+    height: 11rem;
+    padding: 2rem;
+    color: #fff8f9;
+}
+.header-authenticate{
+    float: left;
+    margin-top: -6rem;
+}

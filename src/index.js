@@ -4,10 +4,14 @@ import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import Router from "./Router";
 import {BrowserRouter} from "react-router-dom";
+import {StyleRoot} from "radium";
+
 
 ReactDOM.render(
-    <BrowserRouter>
-        <Router/>
-    </BrowserRouter>,
+    <StyleRoot>
+        <BrowserRouter>
+            <Router/>
+        </BrowserRouter>
+    </StyleRoot>,
     document.getElementById('root'));
 registerServiceWorker();

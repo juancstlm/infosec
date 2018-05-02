@@ -4,6 +4,7 @@ import {withRouter} from "react-router-dom";
 import TextFileReader from "./components/TextFileReader";
 
 import './stylesheets/privacy.css'
+import Header from "./components/Header";
 
 const Last = require("./text/privacy/Last.txt");
 const Info = require("./text/privacy/Info.txt");
@@ -20,10 +21,7 @@ class Privacy extends Component {
     render(){
         return(
             <div className="infosec">
-                <header className="infosec-header">
-                    <h1>Information Security</h1>
-                </header>
-
+                <Header/>
                 <div>
                     <div className='privacy-styles'>
                         <h1 className='privacy-page_title'> Privacy </h1>
