@@ -12,7 +12,9 @@ class App extends Component {
           <div>
 
           </div>
-          <Footer/>
+          <footer>
+              <h1>Footer</h1>
+          </footer>
       </div>
     );
   }
