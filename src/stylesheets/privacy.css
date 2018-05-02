@@ -1,0 +1,38 @@
+.privacy{
+
+}
+.privacy-page_title{
+    color: #6deeb9;
+    margin: 0;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    font-weight: bold;
+}
+.privacy-styles{
+    background-color: #2f3a49f5;
+    height: 12rem;
+    margin-top: -0.5rem;
+}
+.privacy-divBorderG{
+    border-top: .1rem solid rgba(238,245,244,1);
+    border-bottom: .1rem solid rgba(238,245,244,1);
+    width: 100%;
+    background-color: #FCFCFC;
+}
+.privacy-divBorderW{
+    border-top: .1rem solid rgba(238,245,244,1);
+    border-bottom: .1rem solid rgba(238,245,244,1);
+    width: 100%;
+    background-color: #FFFFFF;
+}
+.privacy-div_spacing{
+    width: 60%;
+    margin: 5rem auto 3rem;
+}
+.privacy-heading{
+    text-align: center;
+    margin-bottom: 3rem;
+    font-weight: 500;
+}
