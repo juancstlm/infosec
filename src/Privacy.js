@@ -19,7 +19,7 @@ class Privacy extends Component {
 
     render(){
         return(
-            <div className="infosec">
+            <div className="privacy">
                 <header className="infosec-header">
                     <h1>Information Security</h1>
                 </header>
@@ -76,7 +76,6 @@ class Privacy extends Component {
 
                     </div>
                 </div>
-
                 <Footer/>
             </div>
         )
