@@ -285,7 +285,7 @@ class Header extends React.Component{
     render(){
         return(
             <div className="header">
-                <span className='header-title'>Information Security</span>
+                <span className='header-title' onClick={()=>this.props.history.push('./')}>Information Security</span>
                 <div className='header-authenticate'>
                     <DropdownMenu onSelect={this.handleShowModal}
                         triggerElement={<Button inverted snacksStyle="secondary" size="standard">
