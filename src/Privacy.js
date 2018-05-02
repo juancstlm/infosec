@@ -19,7 +19,7 @@ class Privacy extends Component {
         return(
             <div>
                 <Header/>
-                <div className="infosec">
+                <div className="privacy">
                     <div className='privacy-styles'>
                         <h1 className='privacy-page_title'> Privacy </h1>
                     </div>
