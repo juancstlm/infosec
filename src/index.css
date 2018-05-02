@@ -1,4 +1,6 @@
 body {
+  min-height: 100%;
+  position: relative;
   background: #f2f2f2;
   color: #555555;
   margin: 0;
@@ -7,5 +9,7 @@ body {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, sans-serif;
 }
 html {
+  height: 100%;
   font-size: 62.5%;
+  box-sizing: border-box;
 }
