@@ -3,6 +3,7 @@ import {withRouter} from "react-router-dom";
 import {Button, DropdownMenu, Form, Icon, MenuItem, TextField} from "ic-snacks";
 import {Modal} from "react-bootstrap";
 import ReCAPTCHA  from 'react-google-recaptcha'
+import AmazonCognitoIdentity from 'amazon-cognito-identity-js'
 
 import '../stylesheets/header.css'
 
@@ -33,6 +34,17 @@ class Header extends React.Component{
                 signInModal: true,
             })
         }
+    }
+
+    handleSignIn =(model)=>{
+
+        let authenticationData = {
+            Username: model.email,
+            Password: model.password,
+        };
+        let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
+
+        var poolData;
     }
 
     onValidCAPTCHA=(value)=>{

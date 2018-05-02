@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "amazon-cognito-identity-js": "^2.0.3",
+    "aws-sdk": "^2.230.1",
     "ic-snacks": "0.0.75",
     "radium": "^0.24.0",
     "react": "^16.3.2",
