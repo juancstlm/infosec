@@ -1,9 +1,9 @@
 import React from "react"
 import {withRouter} from "react-router-dom";
-import {Button, DropdownMenu, Form, Icon, MenuItem, TextField} from "ic-snacks";
+import {Button, DropdownMenu, Form, Icon, MenuItem, Slide, TextField} from "ic-snacks";
 import {Modal} from "react-bootstrap";
 import ReCAPTCHA  from 'react-google-recaptcha'
-import AmazonCognitoIdentity from 'amazon-cognito-identity-js'
+
 
 import '../stylesheets/header.css'
 
@@ -19,9 +19,12 @@ class Header extends React.Component{
             signInModal: false,
 
             //CAPTCHA
-            isNotRobot: false, //assume everyone is a robot until proven otherwise
-        }
+            isNotRobot: true, //assume everyone is a robot until proven otherwise
 
+            singUpSuccess: false,
+
+            email: null,
+        }
     }
 
     handleShowModal= (e, model) =>{
@@ -36,7 +39,12 @@ class Header extends React.Component{
         }
     }
 
+    //Closes all the modals
+    handleClose(){this.setState({signUpModal: false, signInModal: false,})};
+
     handleSignIn =(model)=>{
+
+        let AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 
         let authenticationData = {
             Username: model.email,
@@ -44,7 +52,78 @@ class Header extends React.Component{
         };
         let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
 
-        var poolData;
+        var poolData = require('../credentials').poolData;
+
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+        var userData = {
+            Username : model.email,
+            Pool : userPool
+        };
+
+        var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+
+        cognitoUser.authenticateUser(authenticationDetails, {
+            onSuccess: function (result) {
+                console.log('access token + ' + result.getAccessToken().getJwtToken());
+            },
+
+            onFailure: function(err) {
+                alert(err.message)
+            },
+
+        });
+    }
+
+    handleSignUp = (model) =>{
+        let AmazonCognitoIdentity = require('amazon-cognito-identity-js');
+
+        var attributeList = [];
+
+        var poolData = require('../credentials').poolData;
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+        var dataEmail = {
+            Name : 'email',
+            Value : model.email
+        };
+        var attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
+        attributeList.push(attributeEmail);
+
+        let self =this
+        userPool.signUp(model.email, model.password, attributeList, null, function(err, result) {
+            if (err) {
+                alert(err.message)
+                return;
+            }
+            self.setState({
+                singUpSuccess: true,
+            })
+            console.log('Success ', result)
+        });
+    }
+
+    handleConfirmation= (model) =>{
+        let AmazonCognitoIdentity = require('amazon-cognito-identity-js');
+        var poolData = require('../credentials').poolData;
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+        var userData = {
+            Username : this.state.email,
+            Pool : userPool
+        };
+
+        var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+
+        cognitoUser.confirmRegistration(model.confirmation, true, function(err, result) {
+
+            if (err) {
+                alert(err.message);
+                return;
+            }
+
+            alert("Confirmed user")
+            //TODO sign the user in
+        });
     }
 
     onValidCAPTCHA=(value)=>{
@@ -54,8 +133,7 @@ class Header extends React.Component{
         })
     }
 
-    handleClose(){this.setState({signUpModal: false, signInModal: false,})};
-
+    // This modal gets shown when the user wants to sign in
     signInModal(){
         return <div>
                 <Modal show={this.state.signInModal} onHide={this.handleClose}>
@@ -63,7 +141,7 @@ class Header extends React.Component{
                         <h2>Sign In</h2>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form>
+                        <Form formProps={{id:'singInForm'}} onSubmit={this.handleSignIn}>
                             <TextField
                                 floatingLabelText="Email"
                                 name="email"
@@ -72,6 +150,7 @@ class Header extends React.Component{
                                 validations={{isEmail: null, isLength: {min: 3, max: 30}}}
                                 validationErrorText="Sorry, please enter a valid email."
                                 required
+                                style={{marginTop: '1rem', marginBottom: '1rem'}}
                             />
                             <TextField
                                 floatingLabelText="Password"
@@ -81,30 +160,47 @@ class Header extends React.Component{
                                 validations={{isLength: {min: 8, max: 64}}}
                                 validationErrorText="Sorry, password must be min. 8 characters."
                                 required
+                                style={{marginTop: '1rem', marginBottom: '1rem'}}
                             />
-                            <Button type="submit" style={{margin: '6% 15% 3% 15%', width: '70%', height:'2.2em'}} >
-                                Log In
-                            </Button>
                         </Form>
                     </Modal.Body>
+                    <Modal.Footer>
+                        <div style={{textAlign: 'center'}}>
+                            <Button elementAttributes={{form:"singInForm"}} type="submit">
+                                Log In
+                            </Button>
+                        </div>
+                    </Modal.Footer>
                 </Modal>
             </div>
     }
 
-    signUpModal(){
-        return <div>
-            <Modal show={this.state.signUpModal} onHide={this.handleClose} cl>
-                <Modal.Header>
-                    <h2>Sign Up</h2>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <div style={{textAlign:'center'}}>
+    renderSignUpModalBody(){
+        if(this.state.singUpSuccess){
+            return (
+                <Slide in={this.state.singUpSuccess} offset={ 42}>
+                    <Form onSubmit={this.handleConfirmation}>
+                        <TextField
+                            floatingLabelText="Confirmation Code"
+                            name="confirmation"
+                            type="text"
+                            hintText=""
+                            validations={{isLength: {min: 6, max: 6}}}
+                            validationErrorText="Confirmation code is 6 numbers"
+                            required
+                        />
+                    </Form>
+                </Slide>
+            )
+        } else {
+            return (
+                <Form  formProps={{id:'singUpForm'}} onSubmit={this.handleSignUp}>
+                    <div style={{textAlign:'center'}}>
                         <TextField
                             floatingLabelText="First Name"
                             name="firstName"
                             type="firstName"
-                            hintText="sdasd"
+                            style={{marginTop: '1rem', marginBottom: '1rem'}}
                             required
                         />
                         <TextField
@@ -113,6 +209,7 @@ class Header extends React.Component{
                             type="lastName"
                             hintText=""
                             required
+                            style={{marginTop: '1rem', marginBottom: '1rem'}}
                         />
                         <TextField
                             floatingLabelText="Email"
@@ -122,6 +219,8 @@ class Header extends React.Component{
                             validations={{isEmail: null, isLength: {min: 3, max: 30}}}
                             validationErrorText="Sorry, please enter a valid email."
                             required
+                            onChange={(model)=>{this.setState({email: model.target.value})}}
+                            style={{marginTop: '1rem', marginBottom: '1rem'}}
                         />
                         <TextField
                             floatingLabelText="Password"
@@ -131,11 +230,40 @@ class Header extends React.Component{
                             validations={{isLength: {min: 8, max: 64}}}
                             validationErrorText="Sorry, password must be min. 8 characters."
                             required
+                            style={{marginTop: '1rem', marginBottom: '1rem'}}
                         />
                     </div>
-                    </Form>
+                </Form>
+            )
+        }
+    }
+
+    signUpModal(){
+        return <div>
+            <Modal show={this.state.signUpModal} onHide={this.handleClose} cl>
+                <Modal.Header>
+                    <h2>Sign Up</h2>
+                </Modal.Header>
+                <Modal.Body>
+                    {this.renderSignUpModalBody()}
                 </Modal.Body>
                 <Modal.Footer>
+                    {this.renderSignUpModalFooter()}
+                </Modal.Footer>
+            </Modal>
+        </div>
+    }
+
+    renderSignUpModalFooter = ()=>{
+        if(this.state.singUpSuccess){
+            return (
+                <Button type="submit" elementAttributes={{form:"confirmForm"}}>
+                    Submit
+                </Button>
+            )
+        } else {
+            return (
+                <div>
                     <div>
                         <ReCAPTCHA
                             theme='dark'
@@ -145,13 +273,13 @@ class Header extends React.Component{
                         />
                     </div>
                     <div style={{textAlign: 'center'}}>
-                        <Button type="submit" disabled={!this.state.isNotRobot} >
+                        <Button type="submit" disabled={!this.state.isNotRobot} elementAttributes={{form:"singUpForm"}}>
                             Sign Up
                         </Button>
                     </div>
-                </Modal.Footer>
-            </Modal>
-        </div>
+                </div>
+            )
+        }
     }
 
     render(){
