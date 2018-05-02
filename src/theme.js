@@ -1,11 +1,11 @@
 export const theme = {
     colors: {
-        action: '#6deeb9',
-        actionHover: '#6fe09b',
-        primaryBackground: '#FFFFFF',
+        action: '#2f3a49',
+        actionHover: '#2f3a49',
+        primaryBackground: '#6deeb9',
         primaryForeground: '#D30707',
-        secondaryBackground: '#D30707',
-        secondaryForeground: '#FFFFFF',
+        secondaryBackground: '#2f3a49',
+        secondaryForeground: '#6deeb9',
         secondaryForegroundFocus: '#2f3a49',
     }
 };
