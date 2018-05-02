@@ -1,0 +1,33 @@
+.footer-position{
+    position:absolute;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    background-color: rgba(47, 58, 73, 0.96);
+    overflow: visible;
+    clear: both;
+}
+.footer-style{
+    padding-top: 1rem;
+    width: 100%;
+    color: #6deeb9;
+    text-align: center;
+    z-index: 10;
+}
+.footer-links_container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.footer-spacing{
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+    cursor: pointer;
+    margin: .5rem;
+}
+.footer-links{
+    color: #6deeb9;
+    cursor: pointer;
+    margin: .5rem;
+}
