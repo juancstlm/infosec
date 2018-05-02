@@ -6,7 +6,7 @@ import '../stylesheets/footer.css'
 class Footer extends Component {
     render(){
         return(
-            <div className='footer-position'>
+            <div className='footer-position' id="footer">
                 <div className='footer-style'>
                     <div>
                         <div className='footer-links_container'>
