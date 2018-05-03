@@ -1,0 +1,21 @@
+.blog-post{
+    margin: 0 auto;
+}
+.blog-post-image{
+    background: no-repeat center center;
+    width: 100%;
+    background-size: 100% auto;
+ }
+.blog-post-title{
+    font-size: 3.4rem;
+    font-weight: bold;
+    color: #6deeb9;
+}
+.blog-post-post_details{
+    background-color: rgba(0,0,0,.5);
+    padding-top: 10%;
+    padding-bottom: 10%;
+}
+.blog-post-author{
+    color: #fff8f9;
+}
