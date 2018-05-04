@@ -3,8 +3,7 @@ import './stylesheets/infosec.css';
 import Footer from "./components/Footer.js"
 import {withRouter} from "react-router-dom";
 import Header from "./components/Header";
-
-
+import BlogPostGrid from './components/BlogPostGrid'
 
 
 class InfoSec extends Component {
@@ -17,6 +16,7 @@ class InfoSec extends Component {
                         <div className='infosec-title'>Information Security Blog</div>
                     </div>
                 </div>
+                <BlogPostGrid/>
                 <Footer/>
             </div>
         );
