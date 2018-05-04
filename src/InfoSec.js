@@ -3,7 +3,10 @@ import './stylesheets/infosec.css';
 import Footer from "./components/Footer.js"
 import {withRouter} from "react-router-dom";
 import Header from "./components/Header";
-import BlogPost from "./components/BlogPost";
+import TextEditor from "./components/TextEditor";
+
+
+
 
 class InfoSec extends Component {
     render() {
@@ -11,6 +14,10 @@ class InfoSec extends Component {
             <div>
                 <Header/>
                 <div className="infosec">
+                    <div className='infosec-main_image'>
+                        <div className='infosec-title'>Information Security Blog</div>
+                    </div>
+                    <TextEditor/>
                 </div>
                 <Footer/>
             </div>

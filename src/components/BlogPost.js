@@ -1,14 +1,77 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import Header from "./Header";
-import Footer from "./Footer"; // ES6
+import Footer from "./Footer";
+import TextEditor from "./TextEditor";
+import {DynamoDB} from "aws-sdk/index"; // ES6
 
 export default class BlogPost extends React.Component{
+    constructor(){
+        super();
+
+        this.state ={
+            isLoaded: false,
+
+            edit: false,
+            title: null,
+            author: null,
+            text: null,
+            date: null,
+            authorid: null,
+            previewimage: null,
+            mainimage: null,
+        }
+    }
+
+    componentDidMount(){
+        this.getBlogPost()
+    }
+
+    getBlogPost(){
+        var dynamodb = new DynamoDB({
+            region: require('../credentials').region,
+            credentials: {
+                accessKeyId: require('../credentials').accessKeyId,
+                secretAccessKey: require('../credentials').secretAccessKey,
+            }})
+
+        var params = {
+            Key: {
+                'postid': {S: this.props.postid}
+            },
+            TableName: "infosecblog"
+        };
+
+        dynamodb.getItem(params, (err, data)=>{
+            if(err){console.log(err)}
+            else {
+                console.log('data', data)
+                var delta = JSON.parse(data.Item.text.S)
+                this.setState({
+                    text: delta,
+                    title: data.Item.title.S,
+                    author:data.Item.author.S,
+                    date: data.Item.date.S,
+                    authorid: data.Item.authorid.S,
+                    previewimage: data.Item.previewimage.S,
+                    mainimage: data.Item.mainimage.S,
+                    isLoaded:true,
+                })
+            }
+        })
+    }
+
+    renderTextEditor(){
+        if(this.state.isLoaded){
+            return <TextEditor delta={this.state.text} show={false}/>
+        }
+    }
+
     render(){
 
 
         const backgroundImage = {
-            backgroundImage: `url(${this.props.image})`,
+            backgroundImage: `url(${this.state.mainimage})`,
         }
 
         return(
@@ -17,33 +80,26 @@ export default class BlogPost extends React.Component{
                 <div className='blog-post'>
                 <div className='blog-post-image' style={backgroundImage}>
                     <div className='blog-post-post_details'>
-                        <div className='blog-post-title'>{this.props.title}</div>
+                        <div className='blog-post-title'>{this.state.title}</div>
                         <div>
-                            <span className='blog-post-author'>Author: {this.props.author} | </span>
-                            <span className='blog-post-author'>Published On 4/5/18</span>
+                            <span className='blog-post-author'>Author: {this.state.author} | </span>
+                            <span className='blog-post-author'>Published On {this.state.date}</span>
                         </div>
                     </div>
                 </div>
-                <p>
-                    {this.props.text}
-                </p>
+                    <div className='blog-post-content'>
+                        {this.renderTextEditor()}
+                    </div>
                 </div>
                 <Footer/>
             </div>
-
         )
     }
 }
 
 BlogPost.propTypes ={
-    title: PropTypes.string,
-    author: PropTypes.string,
-    image: PropTypes.string,
-    text: PropTypes.string,
+    postid: PropTypes.string,
 }
 BlogPost.defaultProps ={
-    title: 'Blog Post Title',
-    author: 'Juan Castillo',
-    image: 'https://s3-us-west-1.amazonaws.com/juancastillom.com/post1.jpeg',
-    text:'Text goes here'
+    postid: '1'
 }
