@@ -42,7 +42,7 @@ export default class TextEditor extends React.Component{
         }
     }
 
-    onSubmit(){
+    onSubmit=()=>{
         var delta = editor.getContents()
         var data = JSON.stringify(delta)
         console.log('Submited data',data)
@@ -91,10 +91,14 @@ export default class TextEditor extends React.Component{
         dynamodb.putItem(params, (err, data)=>{
             if (err){ console.log(err)}
             else {
-                self.props.onSubmit(delta)
+                this.props.onSubmit(delta)
                 console.log('data', data)
             }
         })
+    }
+
+    callbackFunction=()=>{
+        console.log('callback fired')
     }
 
     onEditPost=()=>{
@@ -107,7 +111,7 @@ export default class TextEditor extends React.Component{
     componentDidMount(){
         editor = new Quill('#editor',options);
             if(this.props.delta){
-                editor.setContents(this.props.delta, 'api')
+                editor.setContents(this.props.delta, 'user')
             }
     }
 

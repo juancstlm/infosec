@@ -4,7 +4,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import TextEditor from "./TextEditor";
 import {DynamoDB} from "aws-sdk/index"; // ES6
-import {Button} from "ic-snacks";
+import {Button, Grow} from "ic-snacks";
 import QuillDeltaToHtmlConverter from 'quill-delta-to-html'
 
 var html
@@ -63,29 +63,28 @@ export default class BlogPost extends React.Component{
                         isLoaded:true,
                     })
                     console.log('delta', delta)
-                    this.renderBlogText()
+                    this.renderBlogText(delta)
                 }
             })
     }
 
     updateDelta=(delta)=>{
-        this.setState({
-            text: delta
-        })
+        console.log('Delta callback ', delta)
+        this.renderBlogText(delta)
+        this.setState({editMode: false})
     }
 
     renderTextEditor(){
-
         // TODO Check that the user is the owner of the post 
         if(this.state.isLoaded){
-            return <TextEditor delta={this.state.text} onSubmit={this.updateDelta}/>
+            return  <TextEditor delta={this.state.text} onSubmit={(delta)=>{this.updateDelta(delta)}}/>
         }
     }
 
-    renderBlogText(){
+    renderBlogText=(delta)=>{
         var blogText = document.getElementById('blog-text')
         var cfg = {};
-        var converter = new QuillDeltaToHtmlConverter(this.state.text.ops, cfg);
+        var converter = new QuillDeltaToHtmlConverter(delta.ops, cfg);
         html = converter.convert();
         blogText.innerHTML = html;
     }
@@ -111,9 +110,16 @@ export default class BlogPost extends React.Component{
                     </div>
                 </div>
                     <div className='blog-post-content'>
+                        <div>
+                            <Button onClick={()=>{this.setState({editMode: true}); console.log(this.state)}}>
+                            Edit Blog Post
+                            </Button>
+                        </div>
                         <div id='blog-text'>
                         </div>
-                    {this.renderTextEditor()}
+                    <Grow in={this.state.editMode} axis='y' >
+                        {this.renderTextEditor()}
+                    </Grow>
                     </div>
                 </div>
                 <Footer/>
