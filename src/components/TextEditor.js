@@ -18,7 +18,6 @@ var toolbarOptions = [
     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
 
     [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-    [{ 'font': [] }],
     [{ 'align': [] }],
 
     ['clean']                                         // remove formatting button
@@ -88,10 +87,11 @@ export default class TextEditor extends React.Component{
             ReturnConsumedCapacity: "TOTAL",
             TableName: "infosecblog"
         };
-
+        var self = this
         dynamodb.putItem(params, (err, data)=>{
             if (err){ console.log(err)}
             else {
+                self.props.onSubmit(delta)
                 console.log('data', data)
             }
         })
@@ -106,39 +106,30 @@ export default class TextEditor extends React.Component{
 
     componentDidMount(){
         editor = new Quill('#editor',options);
-        editor.disable()
-        if(this.props.delta){
-            editor.setContents(this.props.delta, 'api')
-        }
-    }
-
-    renderButtonBar(){
-            if(this.state.editMode){
-                return  <Button onClick={this.onSubmit}>Save</Button>
-            } else
-            return <div>
-                <Button onClick={this.onEditPost}>Edit Blog Post</Button>
-            </div>
+            if(this.props.delta){
+                editor.setContents(this.props.delta, 'api')
+            }
     }
 
 
     render(){
         return(
-            <div>
-                <div id='toolbar'>
-                    <div id='editor'>
+                <div>
+                    <div id='toolbar'>
+                        <div id='editor'>
+                        </div>
+                        <div style={{marginTop: '2rem', float:'right'}}>
+                            <Button onClick={this.onSubmit}>Save</Button>
+                        </div>
                     </div>
-                    {this.renderButtonBar()}
                 </div>
-            </div>
-
-        )
-    }
+            )
+        }
 }
 
 TextEditor.propTypes={
     delta: PropTypes.object,
-    show: PropTypes.bool,
+    onSubmit: PropTypes.func,
 }
 TextEditor.defaultProps ={
 

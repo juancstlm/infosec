@@ -4,6 +4,10 @@ import Header from "./Header";
 import Footer from "./Footer";
 import TextEditor from "./TextEditor";
 import {DynamoDB} from "aws-sdk/index"; // ES6
+import {Button} from "ic-snacks";
+import QuillDeltaToHtmlConverter from 'quill-delta-to-html'
+
+var html
 
 export default class BlogPost extends React.Component{
     constructor(){
@@ -11,6 +15,8 @@ export default class BlogPost extends React.Component{
 
         this.state ={
             isLoaded: false,
+
+            editMode: false,
 
             edit: false,
             title: null,
@@ -24,47 +30,64 @@ export default class BlogPost extends React.Component{
     }
 
     componentDidMount(){
-        this.getBlogPost()
+        this.getBlogPostData()
     }
 
-    getBlogPost(){
+    getBlogPostData(){
         var dynamodb = new DynamoDB({
             region: require('../credentials').region,
             credentials: {
                 accessKeyId: require('../credentials').accessKeyId,
                 secretAccessKey: require('../credentials').secretAccessKey,
             }})
+            var params = {
+                Key: {
+                    'postid': {S: this.props.postid}
+                },
+                TableName: "infosecblog"
+            };
+    
+            dynamodb.getItem(params, (err, data)=>{
+                if(err){console.log(err)}
+                else {
+                    console.log('data', data)
+                    var delta = JSON.parse(data.Item.text.S)
+                    this.setState({
+                        text: delta,
+                        title: data.Item.title.S,
+                        author:data.Item.author.S,
+                        date: data.Item.date.S,
+                        authorid: data.Item.authorid.S,
+                        previewimage: data.Item.previewimage.S,
+                        mainimage: data.Item.mainimage.S,
+                        isLoaded:true,
+                    })
+                    console.log('delta', delta)
+                    this.renderBlogText()
+                }
+            })
+    }
 
-        var params = {
-            Key: {
-                'postid': {S: this.props.postid}
-            },
-            TableName: "infosecblog"
-        };
-
-        dynamodb.getItem(params, (err, data)=>{
-            if(err){console.log(err)}
-            else {
-                console.log('data', data)
-                var delta = JSON.parse(data.Item.text.S)
-                this.setState({
-                    text: delta,
-                    title: data.Item.title.S,
-                    author:data.Item.author.S,
-                    date: data.Item.date.S,
-                    authorid: data.Item.authorid.S,
-                    previewimage: data.Item.previewimage.S,
-                    mainimage: data.Item.mainimage.S,
-                    isLoaded:true,
-                })
-            }
+    updateDelta=(delta)=>{
+        this.setState({
+            text: delta
         })
     }
 
     renderTextEditor(){
+
+        // TODO Check that the user is the owner of the post 
         if(this.state.isLoaded){
-            return <TextEditor delta={this.state.text} show={false}/>
+            return <TextEditor delta={this.state.text} onSubmit={this.updateDelta}/>
         }
+    }
+
+    renderBlogText(){
+        var blogText = document.getElementById('blog-text')
+        var cfg = {};
+        var converter = new QuillDeltaToHtmlConverter(this.state.text.ops, cfg);
+        html = converter.convert();
+        blogText.innerHTML = html;
     }
 
     render(){
@@ -78,17 +101,19 @@ export default class BlogPost extends React.Component{
             <div>
                 <Header/>
                 <div className='blog-post'>
-                <div className='blog-post-image' style={backgroundImage}>
-                    <div className='blog-post-post_details'>
-                        <div className='blog-post-title'>{this.state.title}</div>
-                        <div>
-                            <span className='blog-post-author'>Author: {this.state.author} | </span>
-                            <span className='blog-post-author'>Published On {this.state.date}</span>
-                        </div>
+                    <div className='blog-post-image' style={backgroundImage}>
+                        <div className='blog-post-post_details'>
+                            <div className='blog-post-title'>{this.state.title}</div>
+                            <div>
+                                <span className='blog-post-author'>Author: {this.state.author} | </span>
+                                <span className='blog-post-author'>Published On {this.state.date}</span>
+                            </div>
                     </div>
                 </div>
                     <div className='blog-post-content'>
-                        {this.renderTextEditor()}
+                        <div id='blog-text'>
+                        </div>
+                    {this.renderTextEditor()}
                     </div>
                 </div>
                 <Footer/>

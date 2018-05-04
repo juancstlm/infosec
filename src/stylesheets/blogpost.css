@@ -1,5 +1,6 @@
 .blog-post{
     margin: 0 auto;
+    padding-bottom: 10rem;
 }
 .blog-post-image{
     background: no-repeat center center;
@@ -18,7 +19,7 @@
     text-align: center;
 }
 .blog-post-content{
-
+    margin: 4rem 10%;
 }
 .blog-post-author{
     color: #fff8f9;
