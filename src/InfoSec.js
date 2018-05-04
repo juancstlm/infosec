@@ -15,8 +15,8 @@ class InfoSec extends Component {
                     <div className='infosec-main_image'>
                         <div className='infosec-title'>Information Security Blog</div>
                     </div>
+                    <BlogPostGrid/>
                 </div>
-                <BlogPostGrid/>
                 <Footer/>
             </div>
         );

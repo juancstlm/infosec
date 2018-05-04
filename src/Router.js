@@ -7,12 +7,13 @@ import Privacy from './Privacy'
 import BlogPost from "./components/BlogPost";
 
 
+
 const Router = () => (
     <main>
         <Switch>
             <Route path={'/blogpost'} component={BlogPost}/>
             <Route path={'/privacy'} component={Privacy}/>
-            <Route path={'/'} component={InfoSec}/>
+            <Route exact path={'/'} component={InfoSec}/>
         </Switch>
     </main>
 )

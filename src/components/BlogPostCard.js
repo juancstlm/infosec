@@ -1,8 +1,9 @@
-import React from 'react' 
+import React from 'react'
 import PropTypes from 'prop-types';
 import {DynamoDB} from "aws-sdk/index"; // ES6
+import {withRouter} from "react-router-dom";
 
-export default class BlogPostCard extends React.Component{
+class BlogPostCard extends React.Component{
     constructor(){
         super()
 
@@ -30,7 +31,7 @@ export default class BlogPostCard extends React.Component{
                 ProjectionExpression: 'postid, previewimage, title',
                 TableName: "infosecblog"
             };
-    
+
             dynamodb.getItem(params, (err, data)=>{
                 if(err){console.log(err)}
                 else {
@@ -44,12 +45,22 @@ export default class BlogPostCard extends React.Component{
             })
     }
 
+    handleClick=()=>{
+      const location = {
+        pathname: '/blogpost/' + this.props.postid,
+        state: { postid: this.props.postid}
+      }
+      this.props.history.push(location)
+      console.log('Card clicked')
+    }
+
     render(){
         const backgroundImage = {
             backgroundImage: `url(${this.state.previewimage})`,
         }
         return(
-            <div className='blog_post_card' style={backgroundImage}>
+            <div className='blog_post_card' style={backgroundImage}
+              onClick={this.handleClick}>
                 <div className='blog_post_card-content'>
                     <div className='blog_post_card-title'>{this.state.title}</div>
                 </div>
@@ -57,6 +68,7 @@ export default class BlogPostCard extends React.Component{
         )
     }
 }
+export default withRouter(BlogPostCard)
 
 BlogPostCard.propTypes={
     postid: PropTypes.string,

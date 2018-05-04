@@ -1,23 +1,23 @@
 .blog_post_card{
     cursor: pointer;
-    max-width: 30rem;
-    max-height: 20rem;
     background: no-repeat center center;
     background-size: 100% auto;
+    margin: 1rem;
 }
 .blog_post_card-title{
-    font-size: 2.4rem;
+    font-size: 3.4rem;
     font-weight: bold;
     color: rgba(238,245,244,1);
-    
+
 }
 .blog_post_card-content{
     background-color: rgba(0,0,0,.2);
     padding-top: 15%;
     padding-bottom: 15%;
     text-align: center;
+    height: 100%;
 }
-.blog_post_card-content:hover { 
+.blog_post_card-content:hover {
     transition-timing-function: ease-in-out;
     background-color: rgba(0,0,0,.5);
     transition: background-color .5s;

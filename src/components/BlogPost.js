@@ -6,31 +6,44 @@ import TextEditor from "./TextEditor";
 import {DynamoDB} from "aws-sdk/index"; // ES6
 import {Button, Grow, Icon} from "ic-snacks";
 import QuillDeltaToHtmlConverter from 'quill-delta-to-html'
+import {withRouter, Redirect } from 'react-router'
 
 var html
 
-export default class BlogPost extends React.Component{
-    constructor(){
+class BlogPost extends React.Component{
+    constructor({match, location, history} ){
         super();
 
-        this.state ={
-            isLoaded: false,
+        this.state={
 
-            editMode: false,
+        }
 
-            edit: false,
-            title: null,
-            author: null,
-            text: null,
-            date: null,
-            authorid: null,
-            previewimage: null,
-            mainimage: null,
+        if(location.state){
+          console.log('Valid Post')
+          this.state ={
+              validPost: null,
+              isLoaded: false,
+              editMode: false,
+              edit: false,
+
+              postid: location.state.postid,
+              title: null,
+              author: null,
+              text: null,
+              date: null,
+              authorid: null,
+              previewimage: null,
+              mainimage: null,
+          }
+          this.getBlogPostData()
+        } else {
+          console.log('Invalid Post')
+          history.push('/')
         }
     }
 
     componentDidMount(){
-        this.getBlogPostData()
+      console.log(this.props)
     }
 
     getBlogPostData(){
@@ -42,13 +55,14 @@ export default class BlogPost extends React.Component{
             }})
             var params = {
                 Key: {
-                    'postid': {S: this.props.postid}
+                    'postid': {S: this.state.postid}
                 },
                 TableName: "infosecblog"
             };
-    
+
             dynamodb.getItem(params, (err, data)=>{
-                if(err){console.log(err)}
+                if(err){console.log(err);
+                }
                 else {
                     console.log('data', data)
                     var delta = JSON.parse(data.Item.text.S)
@@ -75,7 +89,7 @@ export default class BlogPost extends React.Component{
     }
 
     renderTextEditor(){
-        // TODO Check that the user is the owner of the post 
+        // TODO Check that the user is the owner of the post
         if(this.state.isLoaded){
             return  <TextEditor delta={this.state.text} onSubmit={(delta)=>{this.updateDelta(delta)}}/>
         }
@@ -96,13 +110,13 @@ export default class BlogPost extends React.Component{
                     <div className='blog-post-button_bar-buton'>
                      <Button snacksStyle="secondary" onClick={()=>{this.setState({editMode: false})}}>
                          Cancel Edit
-                    </Button> 
+                    </Button>
                     </div>
                     <div className='blog-post-button_bar-buton'>
-                    <Button iconPosition="left" icon={<Icon name="trash" />} 
+                    <Button iconPosition="left" icon={<Icon name="trash" />}
                      onClick={()=>{console.log('Delete Post Clicked')}}>
                     Delete Post
-                    </Button> 
+                    </Button>
                     </div>
                 </div>
             )
@@ -113,7 +127,7 @@ export default class BlogPost extends React.Component{
                     <Button onClick={()=>{this.setState({editMode: true})}}>
                          Edit Blog Post
                     </Button>
-                    </div> 
+                    </div>
                 </div>
             )
         }
@@ -123,39 +137,33 @@ export default class BlogPost extends React.Component{
         const backgroundImage = {
             backgroundImage: `url(${this.state.mainimage})`,
         }
-
-        return(
-            <div>
-                <Header/>
-                <div className='blog-post'>
-                    <div className='blog-post-image' style={backgroundImage}>
-                        <div className='blog-post-post_details'>
-                            <div className='blog-post-title'>{this.state.title}</div>
-                            <div>
-                                <span className='blog-post-author'>Author: {this.state.author} | </span>
-                                <span className='blog-post-author'>Published On {this.state.date}</span>
-                            </div>
-                    </div>
-                </div>
-                    <div className='blog-post-content'>
-                        {this.renderButtonBar()}
-                        <div id='blog-text'>
-                        </div>
-                        <hr></hr>
-                    <Grow in={this.state.editMode} axis='y' >
-                        {this.renderTextEditor()}
-                    </Grow>
-                    </div>
-                </div>
-                <Footer/>
-            </div>
-        )
-    }
+          return(
+              <div>
+                  <Header/>
+                  <div className='blog-post'>
+                      <div className='blog-post-image' style={backgroundImage}>
+                          <div className='blog-post-post_details'>
+                              <div className='blog-post-title'>{this.state.title}</div>
+                              <div>
+                                  <span className='blog-post-author'>Author: {this.state.author} | </span>
+                                  <span className='blog-post-author'>Published On {this.state.date}</span>
+                              </div>
+                      </div>
+                  </div>
+                      <div className='blog-post-content'>
+                          {this.renderButtonBar()}
+                          <div id='blog-text'>
+                          </div>
+                          <hr></hr>
+                      <Grow in={this.state.editMode} axis='y' >
+                          {this.renderTextEditor()}
+                      </Grow>
+                      </div>
+                  </div>
+                  <Footer/>
+              </div>
+          )
+        }
 }
 
-BlogPost.propTypes ={
-    postid: PropTypes.string,
-}
-BlogPost.defaultProps ={
-    postid: '1'
-}
+export default withRouter(BlogPost)
