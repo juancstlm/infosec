@@ -4,7 +4,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import TextEditor from "./TextEditor";
 import {DynamoDB} from "aws-sdk/index"; // ES6
-import {Button, Grow} from "ic-snacks";
+import {Button, Grow, Icon} from "ic-snacks";
 import QuillDeltaToHtmlConverter from 'quill-delta-to-html'
 
 var html
@@ -89,9 +89,37 @@ export default class BlogPost extends React.Component{
         blogText.innerHTML = html;
     }
 
+    renderButtonBar=()=>{
+        if(this.state.editMode){
+            return(
+                <div className='blog-post-button_bar'>
+                    <div className='blog-post-button_bar-buton'>
+                     <Button snacksStyle="secondary" onClick={()=>{this.setState({editMode: false})}}>
+                         Cancel Edit
+                    </Button> 
+                    </div>
+                    <div className='blog-post-button_bar-buton'>
+                    <Button iconPosition="left" icon={<Icon name="trash" />} 
+                     onClick={()=>{console.log('Delete Post Clicked')}}>
+                    Delete Post
+                    </Button> 
+                    </div>
+                </div>
+            )
+        } else{
+            return (
+                <div className='blog-post-button_bar'>
+                    <div className='blog-post-button_bar-button'>
+                    <Button onClick={()=>{this.setState({editMode: true})}}>
+                         Edit Blog Post
+                    </Button>
+                    </div> 
+                </div>
+            )
+        }
+    }
+
     render(){
-
-
         const backgroundImage = {
             backgroundImage: `url(${this.state.mainimage})`,
         }
@@ -110,13 +138,10 @@ export default class BlogPost extends React.Component{
                     </div>
                 </div>
                     <div className='blog-post-content'>
-                        <div>
-                            <Button onClick={()=>{this.setState({editMode: true}); console.log(this.state)}}>
-                            Edit Blog Post
-                            </Button>
-                        </div>
+                        {this.renderButtonBar()}
                         <div id='blog-text'>
                         </div>
+                        <hr></hr>
                     <Grow in={this.state.editMode} axis='y' >
                         {this.renderTextEditor()}
                     </Grow>
