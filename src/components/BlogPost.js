@@ -44,6 +44,7 @@ class BlogPost extends React.Component{
 
     componentDidMount(){
       console.log(this.props)
+      console.log(window.innerHeight);
     }
 
     getBlogPostData(){
@@ -155,9 +156,11 @@ class BlogPost extends React.Component{
                           <div id='blog-text'>
                           </div>
                           <hr></hr>
-                      <Grow in={this.state.editMode} axis='y' >
-                          {this.renderTextEditor()}
-                      </Grow>
+                          <div style={{ display: 'flex' }}>
+                            <Grow in={this.state.editMode} axis='y' >
+                                {this.renderTextEditor()}
+                            </Grow>
+                          </div>
                       </div>
                   </div>
                   <Footer/>
