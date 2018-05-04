@@ -18,7 +18,6 @@ class Privacy extends Component {
     render(){
         return(
             <div>
-                <Header/>
                 <div className="privacy">
                     <div className='privacy-styles'>
                         <h1 className='privacy-page_title'> Privacy </h1>
@@ -71,7 +70,6 @@ class Privacy extends Component {
 
                     </div>
                 </div>
-                <Footer/>
             </div>
         )
     }

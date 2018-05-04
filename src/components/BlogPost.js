@@ -140,7 +140,6 @@ class BlogPost extends React.Component{
         }
           return(
               <div>
-                  <Header/>
                   <div className='blog-post'>
                       <div className='blog-post-image' style={backgroundImage}>
                           <div className='blog-post-post_details'>
@@ -163,7 +162,6 @@ class BlogPost extends React.Component{
                           </div>
                       </div>
                   </div>
-                  <Footer/>
               </div>
           )
         }
