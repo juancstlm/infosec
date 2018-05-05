@@ -3,28 +3,36 @@ import {withRouter} from "react-router-dom";
 import {Button, DropdownMenu, Form, Icon, MenuItem, Slide, TextField} from "ic-snacks";
 import {Modal} from "react-bootstrap";
 import ReCAPTCHA  from 'react-google-recaptcha'
+import {CognitoUserPool, AuthenticationDetails, CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
 
 
 import '../stylesheets/header.css'
+
+var cognitoUser
+var userPool
 
 class Header extends React.Component{
 
   constructor(){
     super();
 
+    this.setKeys()
     this.handleClose = this.handleClose.bind(this);
 
     this.state = {
       signUpModal: false,
       signInModal: false,
 
-      //CAPTCHA
+      //CAPTCHA //TODO change to false for release
       isNotRobot: true, //assume everyone is a robot until proven otherwise
 
       singUpSuccess: false,
 
       email: null,
     }
+
+    // Attempts to get the current cognito user
+    this.getCurrentUser()
   }
 
   handleShowModal= (e, model) =>{
@@ -42,46 +50,63 @@ class Header extends React.Component{
   //Closes all the modals
   handleClose(){this.setState({signUpModal: false, signInModal: false,})};
 
+  getCurrentUser(){
+    cognitoUser = userPool.getCurrentUser();
+    var self = this
+    if (cognitoUser != null) {
+      cognitoUser.getSession(function(err, session) {
+        if (err) {
+          alert(err);
+          return;
+        }
+        self.getCognitoUserAttributes()
+        console.log('session validity: ' + session.isValid());
+      });
+    }
+  }
+
   handleSignIn =(model)=>{
-
-    let AmazonCognitoIdentity = require('amazon-cognito-identity-js');
-
     let authenticationData = {
       Username: model.email,
       Password: model.password,
     };
-    let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
-
-    var poolData = require('../credentials').poolData;
-
-    var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+    let authenticationDetails = new AuthenticationDetails(authenticationData);
 
     var userData = {
       Username : model.email,
       Pool : userPool
     };
 
-    var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+    cognitoUser = new CognitoUser(userData);
 
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: function (result) {
-        console.log('access token + ' + result.getAccessToken().getJwtToken());
+        this.getCognitoUserAttributes()
       },
-
       onFailure: function(err) {
-        alert(err.message)
+        console.log('Authentication error',err.message)
       },
 
     });
   }
 
+  getCognitoUserAttributes=()=>{
+    // Necessary becuase the closure has no access to this.state
+    let self = this;
+    var i
+    cognitoUser.getUserAttributes(function(err, result) {
+      if (err) {
+        alert(err);
+        return;
+      }
+      for (i = 0; i < result.length; i++) {
+        console.log('attribute ' + result[i].getName() + ' has value ' + result[i].getValue());
+      }
+    });
+  }
+
   handleSignUp = (model) =>{
-    let AmazonCognitoIdentity = require('amazon-cognito-identity-js');
-
     var attributeList = [];
-
-    var poolData = require('../credentials').poolData;
-    var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
     var dataEmail = {
       Name : 'email',
@@ -92,18 +117,12 @@ class Header extends React.Component{
       Name : 'name',
       Value : model.firstName + ' ' + model.lastName
     };
-    var dataAdmin = {
-      Name : 'administrator',
-      Value : 0
-    };
 
     var data
-    var attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
-    var attribleName = new AmazonCognitoIdentity.CognitoUserAttribute(dataName)
-    var attribleAdmin = new AmazonCognitoIdentity.CognitoUserAttribute(dataAdmin)
+    var attributeEmail = new CognitoUserAttribute(dataEmail);
+    var attribleName = new CognitoUserAttribute(dataName)
     attributeList.push(attributeEmail);
     attributeList.push(attribleName)
-    attributeList.push(attribleAdmin)
 
     let self =this
     userPool.signUp(model.email, model.password, attributeList, null, function(err, result) {
@@ -119,15 +138,12 @@ class Header extends React.Component{
   }
 
   handleConfirmation= (model) =>{
-    let AmazonCognitoIdentity = require('amazon-cognito-identity-js');
-    var poolData = require('../credentials').poolData;
-    var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
     var userData = {
       Username : this.state.email,
       Pool : userPool
     };
 
-    var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+    var cognitoUser = new CognitoUser(userData);
 
     cognitoUser.confirmRegistration(model.confirmation, true, function(err, result) {
 
@@ -135,6 +151,7 @@ class Header extends React.Component{
         alert(err.message);
         return;
       }
+      this.handleClose()
 
       alert("Confirmed user")
     });
@@ -193,7 +210,7 @@ class Header extends React.Component{
     if(this.state.singUpSuccess){
       return (
         <Slide in={this.state.singUpSuccess} offset={ 42}>
-          <Form onSubmit={this.handleConfirmation}>
+          <Form onSubmit={this.handleConfirmation} formProps={{id:'confirmForm'}}>
             <TextField
               floatingLabelText="Confirmation Code"
               name="confirmation"
@@ -315,6 +332,11 @@ class Header extends React.Component{
         </div>
       )
     }
+
+    setKeys(){
+      userPool = new CognitoUserPool(require('../credentials').poolData);
+    }
+
   }
 
   export default withRouter(Header)
