@@ -46,8 +46,6 @@ class BlogPost extends React.Component{
     }
   }
 
-
-
   getCognitoUser(){
     var userPool = new CognitoUserPool(poolData);
     var cognitoUser = userPool.getCurrentUser();
@@ -63,7 +61,15 @@ class BlogPost extends React.Component{
         if (err) {
           console.log(err);
           return;
-        } else console.log(result)
+        } else{
+          console.console.log(result);
+          // result.forEach((attribute) => {
+          //           if(attribute.Name === 'email'){
+          //               self.setState({user: {...self.state.user , email: attribute.Value}}) // set the email
+          //               self.setState({user: {...self.state.user , userId: attribute.Value}}) //set the userId
+          //           }
+          //       })
+        }
       });
     }
   }
