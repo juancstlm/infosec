@@ -1,5 +1,10 @@
+@import "stylesheets/blogpost.css";
+@import "stylesheets/blogpostgrid.css";
+@import "stylesheets/blogpostcard.css";
+
 body {
-  min-height: 100%;
+  min-height: 100rem;
+  clear: both;
   position: relative;
   background: #f2f2f2;
   color: #555555;
