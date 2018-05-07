@@ -5,9 +5,9 @@ import {Modal} from "react-bootstrap";
 import ReCAPTCHA  from 'react-google-recaptcha'
 import {CognitoUserPool, AuthenticationDetails, CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
 
-
 import '../stylesheets/header.css'
 
+// AWS Variables
 var cognitoUser
 var userPool
 
@@ -52,19 +52,21 @@ class Header extends React.Component{
 
   getCurrentUser(){
     cognitoUser = userPool.getCurrentUser();
-    var self = this
+    var self = this // Necessary since closure has no acces to this
     if (cognitoUser != null) {
       cognitoUser.getSession(function(err, session) {
         if (err) {
+          // TODO use react notifications instead of alert
           alert(err);
           return;
         }
-        self.getCognitoUserAttributes()
+        self.getCognitoUserAttributes() // Get the cognito user attribues
         console.log('session validity: ' + session.isValid());
       });
     }
   }
 
+  // Handle when a user submits the sign in form
   handleSignIn =(model)=>{
     let authenticationData = {
       Username: model.email,
@@ -86,10 +88,10 @@ class Header extends React.Component{
       onFailure: function(err) {
         console.log('Authentication error',err.message)
       },
-
     });
   }
 
+  // Gets the conito user's attributes
   getCognitoUserAttributes=()=>{
     // Necessary becuase the closure has no access to this.state
     let self = this;
@@ -100,6 +102,7 @@ class Header extends React.Component{
         return;
       }
       for (i = 0; i < result.length; i++) {
+        // TODO Set the cognito user attribuets in the state
         console.log('attribute ' + result[i].getName() + ' has value ' + result[i].getValue());
       }
     });
