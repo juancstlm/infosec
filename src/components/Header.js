@@ -11,6 +11,9 @@ import '../stylesheets/header.css'
 var cognitoUser
 var userPool
 
+// ReCAPTCHA
+var ReCAPTCHA_Site_Key
+
 class Header extends React.Component{
 
   constructor(){
@@ -302,12 +305,14 @@ class Header extends React.Component{
             <ReCAPTCHA
               theme='dark'
               ref="recaptcha"
-              sitekey="6Lczr1YUAAAAAFCJikwxFiQi1wxJ8Pwm31-JL9gn"
+              sitekey= ReCAPTCHA_Site_Key
               onChange={this.onValidCAPTCHA}
             />
           </div>
           <div style={{textAlign: 'center'}}>
-            <Button type="submit" disabled={!this.state.isNotRobot} elementAttributes={{form:"singUpForm"}}>
+            <Button type="submit"
+                    disabled={!this.state.isNotRobot}
+                    elementAttributes={{form:"singUpForm"}}>
               Sign Up
             </Button>
           </div>
@@ -319,7 +324,8 @@ class Header extends React.Component{
   render(){
     return(
       <div className="header">
-        <span className='header-title' onClick={()=>this.props.history.push('/')}>Information Security</span>
+        <span className='header-title'
+              onClick={()=>this.props.history.push('/')}>Information Security</span>
         <div className='header-authenticate'>
           <DropdownMenu onSelect={this.handleShowModal}
             triggerElement={<Button inverted snacksStyle="secondary" size="standard">
@@ -338,6 +344,7 @@ class Header extends React.Component{
 
     setKeys(){
       userPool = new CognitoUserPool(require('../credentials').poolData);
+      ReCAPTCHA_Site_Key = require('../credentials').ReCAPTCHA_Site_Key
     }
 
   }
