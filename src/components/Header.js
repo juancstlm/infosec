@@ -305,7 +305,7 @@ class Header extends React.Component{
             <ReCAPTCHA
               theme='dark'
               ref="recaptcha"
-              sitekey= ReCAPTCHA_Site_Key
+              sitekey  = {ReCAPTCHA_Site_Key}
               onChange={this.onValidCAPTCHA}
             />
           </div>
