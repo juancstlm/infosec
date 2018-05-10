@@ -34,6 +34,7 @@ class Header extends React.Component{
       singUpSuccess: false,
 
       email: null,
+      username: '',
     }
 
     // Attempts to get the current cognito user
@@ -131,6 +132,9 @@ class Header extends React.Component{
       for (i = 0; i < result.length; i++) {
         // TODO Set the cognito user attribuets in the state
         console.log('attribute ' + result[i].getName() + ' has value ' + result[i].getValue());
+        if(result[i].getName() === 'name'){
+          self.setState({username: result[i].getValue()})
+        }
       }
     });
   }
@@ -398,8 +402,9 @@ class Header extends React.Component{
     if(this.state.isSignedIn){
       return (
         <DropdownMenu onSelect={this.handleUserActions}
-          triggerElement={<Button inverted size="standard">
-            <Icon name='iconPerson'></Icon> Welcome User
+          triggerElement={<Button inverted size="standard"
+            iconPosition="left" icon={<Icon name="iconPerson" />}>
+             Welcome {this.state.username}
           </Button>}>
           <MenuItem label="New Blog Post" value="newPost" style={{color: '#2F3A49'}}/>
           <MenuDivider/>
