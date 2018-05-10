@@ -145,7 +145,6 @@ class Header extends React.Component{
       Value : model.firstName + ' ' + model.lastName
     };
 
-    var data
     var attributeEmail = new CognitoUserAttribute(dataEmail);
     var attribleName = new CognitoUserAttribute(dataName)
     attributeList.push(attributeEmail);
