@@ -195,8 +195,7 @@ class Header extends React.Component{
     if (window.confirm('Are you sure you want to log out?')) {
             var cognitoUser = userPool.getCurrentUser();
             cognitoUser.signOut();
-            console.log(this.props)
-            this.props.history.push('/')
+            window.location.reload();
         } else {
             console.log('cancel')
         }
