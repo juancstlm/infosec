@@ -26,6 +26,7 @@ class Header extends React.Component{
       isSignedIn: false,
       signUpModal: false,
       signInModal: false,
+      newPostModal: false,
 
       //CAPTCHA //TODO change to false for release
       isNotRobot: true, //assume everyone is a robot until proven otherwise
@@ -58,14 +59,16 @@ class Header extends React.Component{
   handleUserActions = (e, model)=>{
     //TODO handle sign out and new post
     if(model.value === 'newPost'){
-      console.log('new post ');
+      this.setState({
+        newPostModal: true,
+      })
     } else if(model.value === 'signOut'){
       this.handleSignOut();
     }
   }
 
   //Closes all the modals
-  handleClose(){this.setState({signUpModal: false, signInModal: false,})};
+  handleClose(){this.setState({signUpModal: false, signInModal: false, newPostModal: false,})};
 
   getCurrentUser=()=>{
     // Attempt to get the current user from session storage
@@ -206,8 +209,8 @@ class Header extends React.Component{
         }
   }
 
-  handleNewPost =()=>{
-    console.log('new post clicked');
+  handleNewPost =(model)=>{
+    console.log('new Post Model', model);
   }
 
   // This modal gets shown when the user wants to sign in
@@ -331,6 +334,37 @@ class Header extends React.Component{
     </div>
   }
 
+  newPostModal(){
+    return <div>
+      <Modal show={this.state.newPostModal} onHide={this.handleClose} cl>
+        <Modal.Header>
+          <h2>New Blog Post</h2>
+        </Modal.Header>
+        <Modal.Body>
+          <Form  formProps={{id:'newPostForm'}} onSubmit={this.handleNewPost}>
+            <div style={{textAlign:'center'}}>
+              <TextField
+                floatingLabelText="Blog Post Title"
+                name="title"
+                type="text"
+                style={{marginTop: '1rem', marginBottom: '1rem'}}
+                required
+              />
+            </div>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <div style={{textAlign: 'center'}}>
+            <Button type="submit"
+                    elementAttributes={{form:"newPostForm"}}>
+              Create Post
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  }
+
   renderSignUpModalFooter = ()=>{
     if(this.state.singUpSuccess){
       return (
@@ -396,6 +430,7 @@ class Header extends React.Component{
           </div>
           {this.signInModal()}
           {this.signUpModal()}
+          {this.newPostModal()}
         </div>
       )
     }
