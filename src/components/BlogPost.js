@@ -1,16 +1,16 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import TextEditor from "./TextEditor";
 import {DynamoDB} from "aws-sdk/index"; // ES6
 import {Button, Grow, Icon} from "ic-snacks";
 import QuillDeltaToHtmlConverter from 'quill-delta-to-html'
-import {withRouter, Redirect } from 'react-router'
-import {CognitoUserAttribute, CognitoUserPool} from 'amazon-cognito-identity-js';
+import {withRouter } from 'react-router'
+import {CognitoUserPool} from 'amazon-cognito-identity-js';
 
 
 var html
-var poolData
+var userPool
 var dynamodb
+var cognitoUser
 
 class BlogPost extends React.Component{
   constructor({match, location, history} ){
@@ -24,6 +24,7 @@ class BlogPost extends React.Component{
     if(location.state){
       console.log('Valid Post')
       this.state ={
+        isAuthor: false, // Is the current user the author of the post
         validPost: null,
         isLoaded: false,
         editMode: false,
@@ -46,32 +47,47 @@ class BlogPost extends React.Component{
     }
   }
 
+  componentDidMount(){
+
+  }
+
   getCognitoUser(){
-    var userPool = new CognitoUserPool(poolData);
-    var cognitoUser = userPool.getCurrentUser();
-    //If there is a cognito user then get his data from the DB otherwise do nothing
+    // Attempt to get the current user from session storage
+    cognitoUser = userPool.getCurrentUser()
+    var self = this // Necessary since closure has no acces to this
     if (cognitoUser != null) {
-      cognitoUser.getSession(function(err, session) {
+      cognitoUser.getSession((err, session)=> {
         if (err) {
+          // TODO use react notifications instead of alert
           console.log(err);
           return;
-        } console.log(session);
-      });
-      cognitoUser.getUserAttributes(function(err, result) {
-        if (err) {
-          console.log(err);
-          return;
-        } else{
-          console.console.log(result);
-          // result.forEach((attribute) => {
-          //           if(attribute.Name === 'email'){
-          //               self.setState({user: {...self.state.user , email: attribute.Value}}) // set the email
-          //               self.setState({user: {...self.state.user , userId: attribute.Value}}) //set the userId
-          //           }
-          //       })
         }
+        console.log('Blog post session validity: ' + session.isValid());
+        self.userAuthenticate()
       });
     }
+  }
+
+  userAuthenticate = ()=>{
+    var self = this
+    var i
+    cognitoUser.getUserAttributes((err, result)=> {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      for (i = 0; i < result.length; i++) {
+        if(result[i].getName() === 'email'){
+          if(this.state.authorid === result[i].getValue()){
+            self.setState({
+              isAuthor: true
+            })
+          } else {
+            console.log('User is not the author of this post');
+          }
+        }
+      }
+    })
   }
 
   getBlogPostData(){
@@ -143,15 +159,19 @@ class BlogPost extends React.Component{
       </div>
     )
   } else{
-    return (
-      <div className='blog-post-button_bar'>
-        <div className='blog-post-button_bar-button'>
-          <Button onClick={()=>{this.setState({editMode: true})}}>
-            Edit Blog Post
-          </Button>
+    if(this.state.isAuthor){
+      return (
+        <div className='blog-post-button_bar'>
+          <div className='blog-post-button_bar-button'>
+            <Button onClick={()=>{this.setState({editMode: true})}}>
+              Edit Blog Post
+            </Button>
+          </div>
         </div>
-      </div>
-    )
+      )
+    } else{
+      return <div></div>
+    }
   }
 }
 
@@ -188,7 +208,7 @@ render(){
 }
 
 setKeys(){
-  poolData = require('../credentials').poolData
+  userPool = new CognitoUserPool(require('../credentials').poolData);
   dynamodb =  new DynamoDB({
     region: require('../credentials').region,
     credentials: {
