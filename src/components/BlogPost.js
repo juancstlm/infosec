@@ -76,6 +76,7 @@ class BlogPost extends React.Component{
         console.log(err);
         return;
       }
+      console.log(result);
       for (i = 0; i < result.length; i++) {
         if(result[i].getName() === 'email'){
           if(this.state.authorid === result[i].getValue()){
@@ -84,6 +85,16 @@ class BlogPost extends React.Component{
             })
           } else {
             console.log('User is not the author of this post');
+          }
+        }
+        else if(result[i].getName() === 'custom:administrator'){
+          if(result[i].getValue() === '1'){
+            self.setState({
+              isAuthor: true
+            })
+          }
+          else {
+            console.log('User is not an admin');
           }
         }
       }
