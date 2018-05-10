@@ -4,6 +4,7 @@ import {Button, DropdownMenu, Form, Icon, MenuItem, MenuDivider, Slide, TextFiel
 import {Modal} from "react-bootstrap";
 import ReCAPTCHA  from 'react-google-recaptcha'
 import {CognitoUserPool, AuthenticationDetails, CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
+import {DynamoDB} from "aws-sdk";
 
 import '../stylesheets/header.css'
 
@@ -135,6 +136,9 @@ class Header extends React.Component{
         if(result[i].getName() === 'name'){
           self.setState({username: result[i].getValue()})
         }
+        else if(result[i].getName() === 'email'){
+          self.setState({email: result[i].getValue()})
+        }
       }
     });
   }
@@ -214,7 +218,59 @@ class Header extends React.Component{
   }
 
   handleNewPost =(model)=>{
-    console.log('new Post Model', model);
+
+    //Send to AWS Dynamo DB
+    var dynamodb = new DynamoDB({
+        region: require('../credentials').region,
+        credentials: {
+            accessKeyId: require('../credentials').accessKeyId,
+            secretAccessKey: require('../credentials').secretAccessKey,
+    }})
+
+
+    var params = {
+        Item: {
+            "postid": {
+                S: '2'
+            },
+            'title': {
+                S: model.title
+            },
+            "author": {
+                S: this.state.username
+            },
+            "text": {
+                S: '{"ops":[]}'
+            },
+            'date': {
+                S: new Date().toUTCString()
+            },
+            'authorid': {
+                S: this.state.email
+            },
+            'previewimage': {
+                S: 'https://s3-us-west-1.amazonaws.com/juancastillom.com/post1.jpeg'
+            },
+            'mainimage': {
+                S: 'https://s3-us-west-1.amazonaws.com/juancastillom.com/post1.jpeg'
+            }
+        },
+        ReturnConsumedCapacity: "TOTAL",
+        TableName: "infosecblog"
+    };
+    dynamodb.putItem(params, (err, data)=>{
+        if (err){ console.log(err)}
+        else {
+          this.handleClose()
+          const location = {
+            pathname: '/blogpost/' + 2,
+            state: { postid: 2}
+          }
+          this.props.history.push(location)
+          console.log('new Post Model', model);
+            console.log('data', data)
+        }
+    })
   }
 
   // This modal gets shown when the user wants to sign in
@@ -356,6 +412,7 @@ class Header extends React.Component{
               />
             </div>
           </Form>
+
         </Modal.Body>
         <Modal.Footer>
           <div style={{textAlign: 'center'}}>

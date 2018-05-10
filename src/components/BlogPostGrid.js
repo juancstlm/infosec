@@ -22,5 +22,5 @@ BlogPostGrid.propTypes = {
     blogPosts: PropTypes.array,
 }
 BlogPostGrid.defaultProps = {
-    blogPosts: ['1']
+    blogPosts: ['1','2']
 }
