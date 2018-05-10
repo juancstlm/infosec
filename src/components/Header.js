@@ -1,6 +1,6 @@
 import React from "react"
 import {withRouter} from "react-router-dom";
-import {Button, DropdownMenu, Form, Icon, MenuItem, Slide, TextField} from "ic-snacks";
+import {Button, DropdownMenu, Form, Icon, MenuItem, MenuDivider, Slide, TextField} from "ic-snacks";
 import {Modal} from "react-bootstrap";
 import ReCAPTCHA  from 'react-google-recaptcha'
 import {CognitoUserPool, AuthenticationDetails, CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
@@ -8,8 +8,8 @@ import {CognitoUserPool, AuthenticationDetails, CognitoUser, CognitoUserAttribut
 import '../stylesheets/header.css'
 
 // AWS Variables
-var cognitoUser
 var userPool
+var cognitoUser
 
 // ReCAPTCHA
 var ReCAPTCHA_Site_Key
@@ -23,6 +23,7 @@ class Header extends React.Component{
     this.handleClose = this.handleClose.bind(this);
 
     this.state = {
+      isSignedIn: false,
       signUpModal: false,
       signInModal: false,
 
@@ -35,6 +36,10 @@ class Header extends React.Component{
     }
 
     // Attempts to get the current cognito user
+
+  }
+
+  componentDidMount(){
     this.getCurrentUser()
   }
 
@@ -50,11 +55,21 @@ class Header extends React.Component{
     }
   }
 
+  handleUserActions = (e, model)=>{
+    //TODO handle sign out and new post
+    if(model.value === 'newPost'){
+      console.log('new post ');
+    } else if(model.value === 'signOut'){
+      this.handleSignOut();
+    }
+  }
+
   //Closes all the modals
   handleClose(){this.setState({signUpModal: false, signInModal: false,})};
 
-  getCurrentUser(){
-    cognitoUser = userPool.getCurrentUser();
+  getCurrentUser=()=>{
+    // Attempt to get the current user from session storage
+    cognitoUser = userPool.getCurrentUser()
     var self = this // Necessary since closure has no acces to this
     if (cognitoUser != null) {
       cognitoUser.getSession(function(err, session) {
@@ -82,11 +97,13 @@ class Header extends React.Component{
       Pool : userPool
     };
 
-    cognitoUser = new CognitoUser(userData);
-
+    let self = this
+    cognitoUser = new CognitoUser(userData)
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: function (result) {
-        this.getCognitoUserAttributes()
+        console.log('access token + ' + result.getAccessToken().getJwtToken());
+        self.getCognitoUserAttributes()
+        self.handleClose()
       },
       onFailure: function(err) {
         console.log('Authentication error',err.message)
@@ -96,6 +113,10 @@ class Header extends React.Component{
 
   // Gets the conito user's attributes
   getCognitoUserAttributes=()=>{
+    // set the log in state to true
+    this.setState({
+      isSignedIn: true
+    })
     // Necessary becuase the closure has no access to this.state
     let self = this;
     var i
@@ -149,7 +170,7 @@ class Header extends React.Component{
       Pool : userPool
     };
 
-    var cognitoUser = new CognitoUser(userData);
+    cognitoUser = new CognitoUser(userData);
 
     cognitoUser.confirmRegistration(model.confirmation, true, function(err, result) {
 
@@ -168,6 +189,21 @@ class Header extends React.Component{
     this.setState({
       isNotRobot: true
     })
+  }
+
+  handleSignOut =() =>{
+    if (window.confirm('Are you sure you want to log out?')) {
+            var cognitoUser = userPool.getCurrentUser();
+            cognitoUser.signOut();
+            console.log(this.props)
+            this.props.history.push('/')
+        } else {
+            console.log('cancel')
+        }
+  }
+
+  handleNewPost =()=>{
+    console.log('new post clicked');
   }
 
   // This modal gets shown when the user wants to sign in
@@ -320,21 +356,39 @@ class Header extends React.Component{
       )
     }
   }
+  renderDropdownMenu(){
+    if(this.state.isSignedIn){
+      return (
+        <DropdownMenu onSelect={this.handleUserActions}
+          triggerElement={<Button inverted size="standard">
+            <Icon name='iconPerson'></Icon> Welcome User
+          </Button>}>
+          <MenuItem label="New Blog Post" value="newPost" style={{color: '#2F3A49'}}/>
+          <MenuDivider/>
+          <MenuItem label="Sign Out" value="signOut" style={{color: '#2F3A49'}}/>
+          </DropdownMenu>
+      )
+    } else {
+      return (
+        <DropdownMenu onSelect={this.handleShowModal}
+          triggerElement={<Button inverted snacksStyle="secondary" size="standard">
+            <Icon name='iconPerson'></Icon>
+          </Button>}>
+          <MenuItem label="Sign In" value="signIn" style={{color: '#2F3A49'}}
+            onClick={this.handleShowSignInModal}/>
+            <MenuItem label="Sign Up" value="signUp" style={{color: '#2F3A49'}}/>
+          </DropdownMenu>
+      )
+    }
+  }
 
   render(){
     return(
       <div className="header">
-        <span className='header-title'
-              onClick={()=>this.props.history.push('/')}>Information Security</span>
+        <div className='header-title'
+              onClick={()=>this.props.history.push('/')}>Information Security</div>
         <div className='header-authenticate'>
-          <DropdownMenu onSelect={this.handleShowModal}
-            triggerElement={<Button inverted snacksStyle="secondary" size="standard">
-              <Icon name='iconPerson'></Icon>
-            </Button>}>
-            <MenuItem label="Sign In" value="signIn" style={{color: '#2F3A49'}}
-              onClick={this.handleShowSignInModal}/>
-              <MenuItem label="Sign Up" value="signUp" style={{color: '#2F3A49'}}/>
-            </DropdownMenu>
+          {this.renderDropdownMenu()}
           </div>
           {this.signInModal()}
           {this.signUpModal()}
