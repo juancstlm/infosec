@@ -87,7 +87,6 @@ export default class TextEditor extends React.Component{
             ReturnConsumedCapacity: "TOTAL",
             TableName: "infosecblog"
         };
-        var self = this
         dynamodb.putItem(params, (err, data)=>{
             if (err){ console.log(err)}
             else {

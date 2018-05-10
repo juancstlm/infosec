@@ -1,7 +1,9 @@
-.footer-position{
-    display: block;
-    bottom: 0;
+.footer{
+    display: fixed;
+    position: absolute;
+    bottom: 0px;
     width: 100%;
+    padding: 0;
     background-color: rgba(47, 58, 73, 0.96);
 }
 .footer-style{
