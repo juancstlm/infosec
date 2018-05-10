@@ -144,11 +144,17 @@ class Header extends React.Component{
       Name : 'name',
       Value : model.firstName + ' ' + model.lastName
     };
+    var dataAdmin = {
+      Name: 'custom:administrator',
+      Value: '0',
+    }
 
     var attributeEmail = new CognitoUserAttribute(dataEmail);
-    var attribleName = new CognitoUserAttribute(dataName)
+    var attributeName = new CognitoUserAttribute(dataName)
+    var attributeAdmin = new CognitoUserAttribute(dataAdmin)
     attributeList.push(attributeEmail);
-    attributeList.push(attribleName)
+    attributeList.push(attributeName)
+    attributeList.push(attributeAdmin)
 
     let self =this
     userPool.signUp(model.email, model.password, attributeList, null, function(err, result) {
