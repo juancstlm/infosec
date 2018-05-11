@@ -39,64 +39,69 @@ class Encryption extends React.Component{
   render(){
     return <div className='encryption'>
       <Panel title="AES 256 Bit Encryption">
-        <TextField
-          floatingLabelText="Key"
-          hintText="Enter your decryption key"
-          defaultValue = 'MyKey'
-          validations={{ isLength: {min: 0, max: 30}}}
-          style={{marginTop: '1rem', marginBottom: '1rem'}}
-          onChange = {(model)=>{this.setState({aesKey: model.target.value})}}
-        />
-        <TextField
-          floatingLabelText="Plaintext"
-          hintText="Enter plaintext to be encrypted using AES"
-          validations={{ isLength: {min: 0, max: 30}}}
-          style={{marginTop: '1rem', marginBottom: '1rem'}}
-          onChange = {(model)=>{this.setState({ciphertextAES: this.encryptAES(model.target.value)})}}
-        />
-        <div>
-          {this.state.ciphertextAES}
+        <div className='encryption_text-fields'>
+          <TextField
+            floatingLabelText="Key"
+            hintText="Enter your decryption key"
+            defaultValue = 'MyKey'
+            validations={{ isLength: {min: 0, max: 30}}}
+            style={{width:'94%', marginBottom:'1.5rem'}}
+            onChange = {(model)=>{this.setState({aesKey: model.target.value})}}
+          />
+          <TextField
+            floatingLabelText="Plaintext"
+            hintText="Enter plaintext to be encrypted using AES"
+            validations={{ isLength: {min: 0, max: 30}}}
+            style={{width:'94%', marginBottom:'1.5rem'}}
+            onChange = {(model)=>{this.setState({ciphertextAES: this.encryptAES(model.target.value)})}}
+          />
         </div>
-
+        <div className='encryption_cyphertext'>
+          Cipher Text: {this.state.ciphertextAES}
+        </div>
       </Panel>
       <Panel title='RC4 Encryption'>
-        <TextField
-          floatingLabelText="Key"
-          hintText="Enter your decryption key"
-          defaultValue = 'MyKey'
-          validations={{ isLength: {min: 0, max: 30}}}
-          style={{marginTop: '1rem', marginBottom: '1rem'}}
-          onChange = {(model)=>{this.setState({rc4Key: model.target.value})}}
-        />
-        <TextField
-          floatingLabelText="Plaintext"
-          hintText="Enter plaintext to be encrypted using AES"
-          validations={{ isLength: {min: 0, max: 30}}}
-          style={{marginTop: '1rem', marginBottom: '1rem'}}
-          onChange = {(model)=>{this.setState({ciphertextRC4: this.encryptRC4(model.target.value)})}}
-        />
-        <div>
-          {this.state.ciphertextRC4}
+        <div className='encryption_text-fields'>
+          <TextField
+            floatingLabelText="Key"
+            hintText="Enter your decryption key"
+            defaultValue = 'MyKey'
+            validations={{ isLength: {min: 0, max: 30}}}
+            style={{width:'94%', marginBottom:'1.5rem'}}
+            onChange = {(model)=>{this.setState({rc4Key: model.target.value})}}
+          />
+          <TextField
+            floatingLabelText="Plaintext"
+            hintText="Enter plaintext to be encrypted using AES"
+            validations={{ isLength: {min: 0, max: 30}}}
+            style={{width:'94%', marginBottom:'1.5rem'}}
+            onChange = {(model)=>{this.setState({ciphertextRC4: this.encryptRC4(model.target.value)})}}
+          />
+        </div>
+        <div className='encryption_cyphertext'>
+          Cipher Text: {this.state.ciphertextRC4}
         </div>
       </Panel>
       <Panel title='Triple DES Encrypton'>
-        <TextField
-          floatingLabelText="Key"
-          hintText="Enter your decryption key"
-          defaultValue = 'MyKey'
-          validations={{ isLength: {min: 0, max: 30}}}
-          style={{marginTop: '1rem', marginBottom: '1rem'}}
-          onChange = {(model)=>{this.setState({trippledesKey: model.target.value})}}
-        />
-        <TextField
-          floatingLabelText="Plaintext"
-          hintText="Enter plaintext to be encrypted using AES"
-          validations={{ isLength: {min: 0, max: 30}}}
-          style={{marginTop: '1rem', marginBottom: '1rem'}}
-          onChange = {(model)=>{this.setState({ciphertextTDES: this.encryptTDES(model.target.value)})}}
-        />
-        <div>
-          {this.state.ciphertextTDES}
+        <div className='encryption_text-fields'>
+          <TextField
+            floatingLabelText="Key"
+            hintText="Enter your decryption key"
+            defaultValue = 'MyKey'
+            validations={{ isLength: {min: 0, max: 30}}}
+            style={{width:'94%', marginBottom:'1.5rem'}}
+            onChange = {(model)=>{this.setState({trippledesKey: model.target.value})}}
+          />
+          <TextField
+            floatingLabelText="Plaintext"
+            hintText="Enter plaintext to be encrypted using AES"
+            validations={{ isLength: {min: 0, max: 30}}}
+            style={{width:'94%', marginBottom:'1.5rem'}}
+            onChange = {(model)=>{this.setState({ciphertextTDES: this.encryptTDES(model.target.value)})}}
+          />
+        </div>
+        <div className='encryption_cyphertext'>
+          Cipher Text: {this.state.ciphertextTDES}
         </div>
       </Panel>
     </div>

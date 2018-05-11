@@ -1,10 +1,11 @@
 .panel{
-  background-color: #ffffff;
-  border: 1px solid #d32221;
+  background-color: #2f3a49;
+  border: 1px solid #6deeb9;
   border-radius: .6rem;
   margin-bottom: 2rem;
   margin-right: 2rem;
   margin-left: 2rem;
+  color: white;
 }
 .panel_h4{
   font-weight: 800;

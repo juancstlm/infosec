@@ -1,3 +1,11 @@
 .encryption{
-  max-width: 104rem;
+margin-top: 3rem;
+}
+.encryption_cyphertext{
+  border-radius: .6rem;
+  border: 1px solid #123dd2;
+  padding: 1rem;
+}
+.encryption_text-fields{
+  text-align: center;
 }
