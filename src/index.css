@@ -1,6 +1,8 @@
 @import "stylesheets/blogpost.css";
 @import "stylesheets/blogpostgrid.css";
 @import "stylesheets/blogpostcard.css";
+@import 'stylesheets/panel.css';
+@import 'stylesheets/header.css';
 
 body {
   min-height: 100rem;
