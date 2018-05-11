@@ -37,7 +37,15 @@ class Encryption extends React.Component{
   }
 
   render(){
+    const backgroundImage = {
+      backgroundImage: `url(https://cdn-images-1.medium.com/max/2000/1*ukLP0nmM8t3uq43Nk_rqcQ.jpeg)`,
+    }
     return <div className='encryption'>
+      <div className='blog-post-image' style={backgroundImage}>
+        <div className='blog-post-post_details'>
+          <div className='blog-post-title'>Encryption / Decryption</div>
+        </div>
+      </div>
       <Panel title="AES 256 Bit Encryption">
         <div className='encryption_text-fields'>
           <TextField
