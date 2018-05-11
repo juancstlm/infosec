@@ -11,6 +11,7 @@ import '../stylesheets/header.css'
 // AWS Variables
 var userPool
 var cognitoUser
+var dynamodb
 
 // ReCAPTCHA
 var ReCAPTCHA_Site_Key
@@ -219,19 +220,12 @@ class Header extends React.Component{
 
   handleNewPost =(model)=>{
 
-    //Send to AWS Dynamo DB
-    var dynamodb = new DynamoDB({
-        region: require('../credentials').region,
-        credentials: {
-            accessKeyId: require('../credentials').accessKeyId,
-            secretAccessKey: require('../credentials').secretAccessKey,
-    }})
-
+    var postid = this.createPostID()
 
     var params = {
         Item: {
             "postid": {
-                S: '2'
+                S: postid
             },
             'title': {
                 S: model.title
@@ -263,8 +257,8 @@ class Header extends React.Component{
         else {
           this.handleClose()
           const location = {
-            pathname: '/blogpost/' + 2,
-            state: { postid: 2}
+            pathname: '/blogpost/' + postid,
+            state: { postid: postid}
           }
           this.props.history.push(location)
           console.log('new Post Model', model);
@@ -500,6 +494,21 @@ class Header extends React.Component{
     setKeys(){
       userPool = new CognitoUserPool(require('../credentials').poolData);
       ReCAPTCHA_Site_Key = require('../credentials').ReCAPTCHA_Site_Key
+      dynamodb = new DynamoDB({
+          region: require('../credentials').region,
+          credentials: {
+              accessKeyId: require('../credentials').accessKeyId,
+              secretAccessKey: require('../credentials').secretAccessKey,
+      }})
+    }
+
+    createPostID(){
+      let now =  Date.now().toString()
+        if (now.length < 14) {
+        const pad = 14 - now.length
+        now += (Math.floor(Math.pow(10, pad - 1) + Math.random() * (Math.pow(10, pad) - Math.pow(10, pad - 1) - 1)))
+      }
+      return [now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-')
     }
 
   }
