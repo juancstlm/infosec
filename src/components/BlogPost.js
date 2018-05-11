@@ -137,6 +137,25 @@ class BlogPost extends React.Component{
     this.setState({editMode: false})
   }
 
+  handleDeletePost = ()=>{
+    var params = {
+      Key:{
+        'postid': {
+          S: this.state.postid
+        }
+      },
+      TableName: 'infosecblog'
+    }
+
+    var self = this
+    dynamodb.deleteItem(params, (err,data)=>{
+      if(err) console.log(err, err.stack)
+      else {
+        self.props.history.push('/')
+      }
+    })
+  }
+
   renderTextEditor(){
     // TODO Check that the user is the owner of the post
     if(this.state.isLoaded){
@@ -163,7 +182,7 @@ class BlogPost extends React.Component{
           </div>
           <div className='blog-post-button_bar-buton'>
             <Button iconPosition="left" icon={<Icon name="trash" />}
-            onClick={()=>{console.log('Delete Post Clicked')}}>
+            onClick={this.handleDeletePost}>
             Delete Post
           </Button>
         </div>
