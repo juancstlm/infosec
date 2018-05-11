@@ -140,7 +140,7 @@ class BlogPost extends React.Component{
   renderTextEditor(){
     // TODO Check that the user is the owner of the post
     if(this.state.isLoaded){
-      return  <TextEditor delta={this.state.text} onSubmit={(delta)=>{this.updateDelta(delta)}}/>
+      return  <TextEditor postid={this.state.postid} delta={this.state.text} onSubmit={(delta)=>{this.updateDelta(delta)}}/>
     }
   }
 
