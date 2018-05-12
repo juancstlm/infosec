@@ -58,36 +58,24 @@ export default class TextEditor extends React.Component{
 
 
         var params = {
-            Item: {
-                "postid": {
-                    S: '1'
-                },
-                'title': {
-                    S: 'Behind The Scenes'
-                },
-                "author": {
-                    S: 'Juan Castillo'
-                },
-                "text": {
-                    S: data
-                },
-                'date': {
-                    S: new Date().toUTCString()
-                },
-                'authorid': {
-                    S: 'juancstlm@gmail.com'
-                },
-                'previewimage': {
-                    S: 'https://s3-us-west-1.amazonaws.com/juancastillom.com/post1.jpeg'
-                },
-                'mainimage': {
-                    S: 'https://s3-us-west-1.amazonaws.com/juancastillom.com/post1.jpeg'
-                }
+          ExpressionAttributeNames: {
+              "#t": "text"
             },
-            ReturnConsumedCapacity: "TOTAL",
-            TableName: "infosecblog"
+            ExpressionAttributeValues:{
+              ':t': {
+                S: data
+              }
+            },
+            Key: {
+              'postid': {
+                S: this.props.postid
+              }
+            },
+            ReturnValues: 'ALL_NEW',
+            TableName: "infosecblog",
+            UpdateExpression: "SET #t =:t",
         };
-        dynamodb.putItem(params, (err, data)=>{
+        dynamodb.updateItem(params, (err, data)=>{
             if (err){ console.log(err)}
             else {
                 this.props.onSubmit(delta)

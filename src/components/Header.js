@@ -4,12 +4,14 @@ import {Button, DropdownMenu, Form, Icon, MenuItem, MenuDivider, Slide, TextFiel
 import {Modal} from "react-bootstrap";
 import ReCAPTCHA  from 'react-google-recaptcha'
 import {CognitoUserPool, AuthenticationDetails, CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
+import {DynamoDB} from "aws-sdk";
 
 import '../stylesheets/header.css'
 
 // AWS Variables
 var userPool
 var cognitoUser
+var dynamodb
 
 // ReCAPTCHA
 var ReCAPTCHA_Site_Key
@@ -26,6 +28,7 @@ class Header extends React.Component{
       isSignedIn: false,
       signUpModal: false,
       signInModal: false,
+      newPostModal: false,
 
       //CAPTCHA //TODO change to false for release
       isNotRobot: true, //assume everyone is a robot until proven otherwise
@@ -33,6 +36,7 @@ class Header extends React.Component{
       singUpSuccess: false,
 
       email: null,
+      username: '',
     }
 
     // Attempts to get the current cognito user
@@ -58,14 +62,16 @@ class Header extends React.Component{
   handleUserActions = (e, model)=>{
     //TODO handle sign out and new post
     if(model.value === 'newPost'){
-      console.log('new post ');
+      this.setState({
+        newPostModal: true,
+      })
     } else if(model.value === 'signOut'){
       this.handleSignOut();
     }
   }
 
   //Closes all the modals
-  handleClose(){this.setState({signUpModal: false, signInModal: false,})};
+  handleClose(){this.setState({signUpModal: false, signInModal: false, newPostModal: false,})};
 
   getCurrentUser=()=>{
     // Attempt to get the current user from session storage
@@ -128,6 +134,12 @@ class Header extends React.Component{
       for (i = 0; i < result.length; i++) {
         // TODO Set the cognito user attribuets in the state
         console.log('attribute ' + result[i].getName() + ' has value ' + result[i].getValue());
+        if(result[i].getName() === 'name'){
+          self.setState({username: result[i].getValue()})
+        }
+        else if(result[i].getName() === 'email'){
+          self.setState({email: result[i].getValue()})
+        }
       }
     });
   }
@@ -144,11 +156,17 @@ class Header extends React.Component{
       Name : 'name',
       Value : model.firstName + ' ' + model.lastName
     };
+    var dataAdmin = {
+      Name: 'custom:administrator',
+      Value: '0',
+    }
 
     var attributeEmail = new CognitoUserAttribute(dataEmail);
-    var attribleName = new CognitoUserAttribute(dataName)
+    var attributeName = new CognitoUserAttribute(dataName)
+    var attributeAdmin = new CognitoUserAttribute(dataAdmin)
     attributeList.push(attributeEmail);
-    attributeList.push(attribleName)
+    attributeList.push(attributeName)
+    attributeList.push(attributeAdmin)
 
     let self =this
     userPool.signUp(model.email, model.password, attributeList, null, function(err, result) {
@@ -200,8 +218,53 @@ class Header extends React.Component{
         }
   }
 
-  handleNewPost =()=>{
-    console.log('new post clicked');
+  handleNewPost =(model)=>{
+
+    var postid = this.createPostID()
+
+    var params = {
+        Item: {
+            "postid": {
+                S: postid
+            },
+            'title': {
+                S: model.title
+            },
+            "author": {
+                S: this.state.username
+            },
+            "text": {
+                S: '{"ops":[]}'
+            },
+            'date': {
+                S: new Date().toUTCString()
+            },
+            'authorid': {
+                S: this.state.email
+            },
+            'previewimage': {
+                S: 'https://s3-us-west-1.amazonaws.com/juancastillom.com/post1.jpeg'
+            },
+            'mainimage': {
+                S: 'https://s3-us-west-1.amazonaws.com/juancastillom.com/post1.jpeg'
+            }
+        },
+        ReturnConsumedCapacity: "TOTAL",
+        TableName: "infosecblog"
+    };
+    dynamodb.putItem(params, (err, data)=>{
+        if (err){ console.log(err)}
+        else {
+          this.handleClose()
+          const location = {
+            pathname: '/blogpost/' + postid,
+            state: { postid: postid}
+          }
+          this.props.history.push(location)
+          console.log('new Post Model', model);
+            console.log('data', data)
+        }
+    })
   }
 
   // This modal gets shown when the user wants to sign in
@@ -325,6 +388,38 @@ class Header extends React.Component{
     </div>
   }
 
+  newPostModal(){
+    return <div>
+      <Modal show={this.state.newPostModal} onHide={this.handleClose} cl>
+        <Modal.Header>
+          <h2>New Blog Post</h2>
+        </Modal.Header>
+        <Modal.Body>
+          <Form  formProps={{id:'newPostForm'}} onSubmit={this.handleNewPost}>
+            <div style={{textAlign:'center'}}>
+              <TextField
+                floatingLabelText="Blog Post Title"
+                name="title"
+                type="text"
+                style={{marginTop: '1rem', marginBottom: '1rem'}}
+                required
+              />
+            </div>
+          </Form>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <div style={{textAlign: 'center'}}>
+            <Button type="submit"
+                    elementAttributes={{form:"newPostForm"}}>
+              Create Post
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  }
+
   renderSignUpModalFooter = ()=>{
     if(this.state.singUpSuccess){
       return (
@@ -358,8 +453,9 @@ class Header extends React.Component{
     if(this.state.isSignedIn){
       return (
         <DropdownMenu onSelect={this.handleUserActions}
-          triggerElement={<Button inverted size="standard">
-            <Icon name='iconPerson'></Icon> Welcome User
+          triggerElement={<Button inverted size="standard"
+            iconPosition="left" icon={<Icon name="iconPerson" />}>
+             Welcome {this.state.username}
           </Button>}>
           <MenuItem label="New Blog Post" value="newPost" style={{color: '#2F3A49'}}/>
           <MenuDivider/>
@@ -390,6 +486,7 @@ class Header extends React.Component{
           </div>
           {this.signInModal()}
           {this.signUpModal()}
+          {this.newPostModal()}
         </div>
       )
     }
@@ -397,6 +494,21 @@ class Header extends React.Component{
     setKeys(){
       userPool = new CognitoUserPool(require('../credentials').poolData);
       ReCAPTCHA_Site_Key = require('../credentials').ReCAPTCHA_Site_Key
+      dynamodb = new DynamoDB({
+          region: require('../credentials').region,
+          credentials: {
+              accessKeyId: require('../credentials').accessKeyId,
+              secretAccessKey: require('../credentials').secretAccessKey,
+      }})
+    }
+
+    createPostID(){
+      let now =  Date.now().toString()
+        if (now.length < 14) {
+        const pad = 14 - now.length
+        now += (Math.floor(Math.pow(10, pad - 1) + Math.random() * (Math.pow(10, pad) - Math.pow(10, pad - 1) - 1)))
+      }
+      return [now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-')
     }
 
   }

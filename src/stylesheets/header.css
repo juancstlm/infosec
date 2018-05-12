@@ -10,8 +10,6 @@
   display: flex;
   top: 2.5rem;
   left: 2rem;
-  width: 100%;
-    /* width: 10rem; */
 }
 .header-title{
     font-weight: bold;
