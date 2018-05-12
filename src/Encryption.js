@@ -53,7 +53,7 @@ class Encryption extends React.Component {
 
   decryptTDES(text) {
     var bytes = CryptoJS.TripleDES.decrypt(
-      text.toString,
+      text.toString(),
       this.state.trippledesKey
     );
     var plaintext = bytes.toString(CryptoJS.enc.Utf8);
@@ -134,9 +134,18 @@ class Encryption extends React.Component {
                 });
               }}
             />
-          </div>
-          <div className="encryption_cyphertext">
-            Cipher Text: {this.state.ciphertextRC4}
+            <TextField
+              floatingLabelText="Ciphertext"
+              value={this.state.ciphertextRC4}
+              hintText="Enter ciphertext to be decrypted by RC4"
+              style={{ width: "94%", marginBottom: "1.5rem" }}
+              onChange={model => {
+                this.setState({
+                  plaintextRC4: this.decryptRC4(model.target.value),
+                  ciphertextRC4: model.target.value
+                });
+              }}
+            />
           </div>
         </Panel>
         <Panel title="Triple DES Encrypton">
@@ -162,9 +171,15 @@ class Encryption extends React.Component {
                 });
               }}
             />
-          </div>
-          <div className="encryption_cyphertext">
-            Cipher Text: {this.state.ciphertextTDES}
+            <TextField
+            floatingLabelText="Ciphertext"
+            value = {this.state.ciphertextTDES}
+            hintText="Enter ciphertext to be decrypted by Tripple DES"
+            style={{width:'94%', marginBottom:'1.5rem'}}
+            onChange = {(model)=>{
+              this.setState({plaintextTDES: this.decryptTDES(model.target.value),
+                ciphertextTDES: model.target.value})}}
+          />
           </div>
         </Panel>
       </div>
