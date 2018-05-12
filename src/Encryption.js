@@ -125,7 +125,7 @@ class Encryption extends React.Component {
             />
             <TextField
               floatingLabelText="Plaintext"
-              hintText="Enter plaintext to be encrypted using AES"
+              hintText="Enter plaintext to be encrypted using RC4"
               validations={{ isLength: { min: 0, max: 30 } }}
               style={{ width: "94%", marginBottom: "1.5rem" }}
               onChange={model => {
@@ -162,7 +162,7 @@ class Encryption extends React.Component {
             />
             <TextField
               floatingLabelText="Plaintext"
-              hintText="Enter plaintext to be encrypted using AES"
+              hintText="Enter plaintext to be encrypted using TippleDES"
               validations={{ isLength: { min: 0, max: 30 } }}
               style={{ width: "94%", marginBottom: "1.5rem" }}
               onChange={model => {
