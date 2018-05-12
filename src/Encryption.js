@@ -172,14 +172,17 @@ class Encryption extends React.Component {
               }}
             />
             <TextField
-            floatingLabelText="Ciphertext"
-            value = {this.state.ciphertextTDES}
-            hintText="Enter ciphertext to be decrypted by Tripple DES"
-            style={{width:'94%', marginBottom:'1.5rem'}}
-            onChange = {(model)=>{
-              this.setState({plaintextTDES: this.decryptTDES(model.target.value),
-                ciphertextTDES: model.target.value})}}
-          />
+              floatingLabelText="Ciphertext"
+              value={this.state.ciphertextTDES}
+              hintText="Enter ciphertext to be decrypted by Tripple DES"
+              style={{ width: "94%", marginBottom: "1.5rem" }}
+              onChange={model => {
+                this.setState({
+                  plaintextTDES: this.decryptTDES(model.target.value),
+                  ciphertextTDES: model.target.value
+                });
+              }}
+            />
           </div>
         </Panel>
       </div>
