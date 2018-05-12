@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, NavLink } from "react-router-dom";
 import {
   Button,
   DropdownMenu,
@@ -551,6 +551,12 @@ class Header extends React.Component {
           Information Security
         </div>
         <div className="header-authenticate">{this.renderDropdownMenu()}</div>
+        <div className='header-navigation'>
+        <NavLink
+        to="/encryption"
+        activeClassName="header-nav_link-selected"
+        >Encryption</NavLink>
+        </div>
         {this.signInModal()}
         {this.signUpModal()}
         {this.newPostModal()}
