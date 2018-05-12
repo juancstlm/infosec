@@ -18,6 +18,9 @@ class Encryption extends React.Component{
       ciphertestAES : '',
       ciphertextRC4: '',
       ciphertextTDES: '',
+      plaintextAES: '',
+      plaintextRC4: '',
+      plaintextTDES: '',
     }
   }
 
@@ -36,6 +39,13 @@ class Encryption extends React.Component{
     return ciphertext.toString()
   }
 
+  decryptAES(text){
+    var bytes  = CryptoJS.AES.decrypt(text.toString(), this.state.aesKey);
+    var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+    // var ciphertext = CryptoJS.AES.decrypt(text, this.state.aesKey);
+    return plaintext
+  }
+
   render(){
     const backgroundImage = {
       backgroundImage: `url(https://cdn-images-1.medium.com/max/2000/1*ukLP0nmM8t3uq43Nk_rqcQ.jpeg)`,
@@ -46,12 +56,13 @@ class Encryption extends React.Component{
           <div className='blog-post-title'>Encryption / Decryption</div>
         </div>
       </div>
-      <Panel title="AES 256 Bit Encryption">
+      <Panel title="AES 256 Bit Encryption / Decryption">
         <div className='encryption_text-fields'>
           <TextField
             floatingLabelText="Key"
             hintText="Enter your decryption key"
-            defaultValue = 'MyKey'
+            value = {this.state.aesKey}
+            type='text'
             validations={{ isLength: {min: 0, max: 30}}}
             style={{width:'94%', marginBottom:'1.5rem'}}
             onChange = {(model)=>{this.setState({aesKey: model.target.value})}}
@@ -59,13 +70,24 @@ class Encryption extends React.Component{
           <TextField
             floatingLabelText="Plaintext"
             hintText="Enter plaintext to be encrypted using AES"
-            validations={{ isLength: {min: 0, max: 30}}}
+            type='text'
+            value={this.state.plaintextAES}
             style={{width:'94%', marginBottom:'1.5rem'}}
-            onChange = {(model)=>{this.setState({ciphertextAES: this.encryptAES(model.target.value)})}}
+            onChange = {(model)=>{
+              this.setState(
+              {ciphertextAES: this.encryptAES(model.target.value),
+                plaintextAES: model.target.value
+              })}}
           />
-        </div>
-        <div className='encryption_cyphertext'>
-          Cipher Text: {this.state.ciphertextAES}
+          <TextField
+            floatingLabelText="Ciphertext"
+            value = {this.state.ciphertextAES}
+            hintText="Enter ciphertext to be decrypted by AES"
+            style={{width:'94%', marginBottom:'1.5rem'}}
+            onChange = {(model)=>{
+              this.setState({plaintextAES: this.decryptAES(model.target.value),
+                ciphertextAES: model.target.value})}}
+          />
         </div>
       </Panel>
       <Panel title='RC4 Encryption'>
