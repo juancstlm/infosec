@@ -1,9 +1,9 @@
-.encryption{
-
+.encryption {
+	padding-bottom: 10rem;
 }
-.encryption_cyphertext{
-  padding: 1rem;
+.encryption_cyphertext {
+	padding: 1rem;
 }
-.encryption_text-fields{
-  text-align: center;
+.encryption_text-fields {
+	text-align: center;
 }
