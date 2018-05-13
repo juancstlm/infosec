@@ -494,14 +494,12 @@ class Header extends React.Component {
           triggerElement={
             <Button
               inverted
-              size="standard"
-              iconPosition="left"
-              icon={<Icon name="iconPerson" />}
-            >
-              Welcome {this.state.username}
-            </Button>
-          }
-        >
+              size="standard">
+              <Icon name="iconPerson" />
+            </Button>}>
+          <MenuItem style={{ color: "#2F3A49", padding: '1.6rem 1.6rem' }} disabled>
+              {this.state.username}
+          </MenuItem>
           <MenuItem
             label="New Blog Post"
             value="newPost"
@@ -551,12 +549,6 @@ class Header extends React.Component {
           Information Security
         </div>
         <div className="header-authenticate">{this.renderDropdownMenu()}</div>
-        <div className='header-navigation'>
-        <NavLink
-        to="/encryption"
-        activeClassName="header-nav_link-selected"
-        >Encryption</NavLink>
-        </div>
         {this.signInModal()}
         {this.signUpModal()}
         {this.newPostModal()}

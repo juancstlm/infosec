@@ -1,6 +1,6 @@
 .header {
   background-color: #2f3a49;
-  padding: 2rem 2rem 0 2rem;
+  padding: 2rem 2rem 2.3rem 2rem;
   color: #fff8f9;
   border-bottom: 1px solid #6deeb9;
 }
@@ -10,6 +10,7 @@
   display: flex;
   top: 2.5rem;
   left: 2rem;
+  min-width: 25%;
 }
 .header-title {
   font-weight: bold;
