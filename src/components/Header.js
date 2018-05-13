@@ -559,6 +559,7 @@ class Header extends React.Component {
   }
 
   setKeys(){
+    console.log('process env',process.env)
     if(process.env.NODE_ENV === 'development'){
       userPool = new CognitoUserPool(require('../credentials').poolData);
       dynamodb =  new DynamoDB({
