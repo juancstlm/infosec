@@ -1,5 +1,7 @@
 .infosec {
   text-align: center;
+  margin: 0 auto;
+  padding-bottom: 12rem;
 }
 
 .infosec-logo {
@@ -15,11 +17,21 @@
 }
 
 .infosec-title {
-  font-size: 1.5em;
+    font-size: 3.4rem;
+    font-weight: bold;
+    color: #6deeb9;
+    padding-top: 15%;
+    padding-bottom: 15%;
+    background-color: rgba(0,0,0,.5);
 }
 
 .infosec-intro {
   font-size: large;
+}
+.infosec-main_image{
+    background: url("https://cdn-images-1.medium.com/max/2000/1*oTCgvrRHRzNApJxeh-JKJg.png") no-repeat center center;
+    width: 100%;
+    background-size: 100% auto;
 }
 
 @keyframes infosec-logo-spin {

@@ -6,11 +6,11 @@ import '../stylesheets/footer.css'
 class Footer extends Component {
     render(){
         return(
-            <div className='footer-position' id="footer">
+            <footer className='footer' id="footer">
                 <div className='footer-style'>
                     <div>
                         <div className='footer-links_container'>
-                            <Link to={"./privacy"} className='footer-links'>Privacy</Link>
+                            <Link to={"/privacy"} className='footer-links'>Privacy</Link>
                         </div>
                         <div className='footer-spacing'>
                             Copyright © {new Date().getFullYear()}
@@ -18,7 +18,7 @@ class Footer extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </footer>
             )
     }
 }

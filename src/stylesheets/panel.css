@@ -1,0 +1,14 @@
+.panel{
+  background-color: #2f3a49;
+  border: 1px solid #6deeb9;
+  border-radius: .6rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+.panel_h4{
+  font-weight: 800;
+  font-size: 1.8rem;
+  line-height: 1.8rem;
+  padding: 2rem 3rem;
+  margin: 0;
+}

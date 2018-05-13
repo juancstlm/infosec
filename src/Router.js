@@ -1,17 +1,28 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import Header from './components/Header'
+import Footer from "./components/Footer";
 
 // All pages here
 import InfoSec from './InfoSec'
 import Privacy from './Privacy'
+import BlogPost from "./components/BlogPost"
+import Encryption from './Encryption'
+import DemoSQL from './DemoSQL'
+
 
 
 const Router = () => (
     <main>
+      <Header/>
         <Switch>
+            <Route exact path={'/blogpost/1526-173239-8806'} component={Encryption}/>
+            <Route exact path={'/blogpost/1526-172282-7746'} component={DemoSQL}/>
+            <Route path={'/blogpost'} component={BlogPost}/>
             <Route path={'/privacy'} component={Privacy}/>
-            <Route path={'/'} component={InfoSec}/>
+            <Route exact path={'/'} component={InfoSec}/>
         </Switch>
+        <Footer/>
     </main>
 )
 
