@@ -122,7 +122,7 @@ class DemoSQL extends React.Component {
 					</div>
 				</div>
 				<div className='demosql'>
-					<img data-src="https://cdn-images-1.medium.com/max/800/1*P4nj9fJjSeJ9-c0rwSZqlg.png" src="https://cdn-images-1.medium.com/max/800/1*P4nj9fJjSeJ9-c0rwSZqlg.png"/>
+					<img style={{width: '100%'}} data-src="https://cdn-images-1.medium.com/max/800/1*P4nj9fJjSeJ9-c0rwSZqlg.png" src="https://cdn-images-1.medium.com/max/800/1*P4nj9fJjSeJ9-c0rwSZqlg.png"/>
 					<div id='blog-text'>
 					</div>
 					<div className='demosql_log-in-form'>
