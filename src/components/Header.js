@@ -43,8 +43,8 @@ class Header extends React.Component {
       signInModal: false,
       newPostModal: false,
 
-      //CAPTCHA //TODO change to false for release
-      isNotRobot: true, //assume everyone is a robot until proven otherwise
+      //CAPTCHA
+      isNotRobot: false, //assume everyone is a robot until proven otherwise
 
       singUpSuccess: false,
 
