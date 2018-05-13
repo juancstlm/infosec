@@ -499,7 +499,7 @@ class Header extends React.Component {
             </Button>}>
           <MenuItem style={{ color: "#2F3A49"}}
             disabled
-            label={this.state.username}
+            label={`Welcome ${this.state.username}`}
             value=''>
           </MenuItem>
           <MenuItem
