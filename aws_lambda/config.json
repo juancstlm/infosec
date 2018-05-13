@@ -1,0 +1,6 @@
+{
+    "dbhost" : "*YOUR_HOST_HERE",
+    "dbname" : "infosec_users_demo",
+    "dbuser" :"juancstlm",
+    "dbpassword" :"****************"
+}
