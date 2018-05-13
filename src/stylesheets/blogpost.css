@@ -35,5 +35,5 @@
     margin-bottom: 1rem;
 }
 .ql-image{
-    width: 100%;
+    max-width: 100%;
 }
