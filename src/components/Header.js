@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter, NavLink } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import {
   Button,
   DropdownMenu,
@@ -497,8 +497,10 @@ class Header extends React.Component {
               size="standard">
               <Icon name="iconPerson" />
             </Button>}>
-          <MenuItem style={{ color: "#2F3A49", padding: '1.6rem 1.6rem' }} disabled>
-              {this.state.username}
+          <MenuItem style={{ color: "#2F3A49"}}
+            disabled
+            label={this.state.username}
+            value=''>
           </MenuItem>
           <MenuItem
             label="New Blog Post"
