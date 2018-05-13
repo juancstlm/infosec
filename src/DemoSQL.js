@@ -10,7 +10,6 @@ import './stylesheets/demosql.css'
 import {DynamoDB} from "aws-sdk/index"; // ES6
 
 var postid = '1526-172282-7746';
-var userPool
 var dynamodb
 var html
 
@@ -160,13 +159,30 @@ class DemoSQL extends React.Component {
 	}
 
 	setKeys(){
-	  dynamodb =  new DynamoDB({
-	    region: require('./credentials').region,
-	    credentials: {
-	      accessKeyId: require('./credentials').accessKeyId,
-	      secretAccessKey: require('./credentials').secretAccessKey,
-	    }})
-	  }
+    if(process.env.NODE_ENV === 'development'){
+      // userPool = new CognitoUserPool(require('./credentials').poolData);
+      dynamodb =  new DynamoDB({
+        region: 'us-east-1',
+        credentials: {
+          accessKeyId: require('./credentials').accessKeyId,
+          secretAccessKey: require('./credentials').secretAccessKey,
+        }})
+        // ReCAPTCHA_Site_Key = require("../credentials").ReCAPTCHA_Site_Key;
+      }
+      else {
+        // userPool = new CognitoUserPool({
+        //     UserPoolId : process.env.UserPoolId,
+        //     ClientId : process.env.ClientId
+        // })
+        dynamodb = new DynamoDB({
+          region: 'us-east-1',
+          credentials: {
+            accessKeyId: process.env.accessKeyId,
+            secretAccessKey: process.env.secretAccessKey
+          }})
+        // ReCAPTCHA_Site_Key = process.env.ReCAPTCHA_Site_Key;
+      }
+    }
 }
 
 export default withRouter(DemoSQL);

@@ -558,17 +558,31 @@ class Header extends React.Component {
     );
   }
 
-  setKeys() {
-    userPool = new CognitoUserPool(require("../credentials").poolData);
-    ReCAPTCHA_Site_Key = require("../credentials").ReCAPTCHA_Site_Key;
-    dynamodb = new DynamoDB({
-      region: require("../credentials").region,
-      credentials: {
-        accessKeyId: require("../credentials").accessKeyId,
-        secretAccessKey: require("../credentials").secretAccessKey
+  setKeys(){
+    if(process.env.NODE_ENV === 'development'){
+      userPool = new CognitoUserPool(require('../credentials').poolData);
+      dynamodb =  new DynamoDB({
+        region: 'us-east-1',
+        credentials: {
+          accessKeyId: require('../credentials').accessKeyId,
+          secretAccessKey: require('../credentials').secretAccessKey,
+        }})
+        ReCAPTCHA_Site_Key = require("../credentials").ReCAPTCHA_Site_Key;
       }
-    });
-  }
+      else {
+        userPool = new CognitoUserPool({
+            UserPoolId : process.env.UserPoolId,
+            ClientId : process.env.ClientId
+        })
+        dynamodb = new DynamoDB({
+          region: 'us-east-1',
+          credentials: {
+            accessKeyId: process.env.accessKeyId,
+            secretAccessKey: process.env.secretAccessKey
+          }})
+        ReCAPTCHA_Site_Key = process.env.ReCAPTCHA_Site_Key;
+      }
+    }
 
   createPostID() {
     let now = Date.now().toString();
