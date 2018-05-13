@@ -6,7 +6,9 @@ import Footer from "./components/Footer";
 // All pages here
 import InfoSec from './InfoSec'
 import Privacy from './Privacy'
-import BlogPost from "./components/BlogPost";
+import BlogPost from "./components/BlogPost"
+import Encryption from './Encryption'
+import DemoSQL from './DemoSQL'
 
 
 
@@ -14,6 +16,8 @@ const Router = () => (
     <main>
       <Header/>
         <Switch>
+            <Route exact path={'/blogpost/1526-172282-7746'} component={DemoSQL}/>
+            <Route path={'/encryption'} component={Encryption}/>
             <Route path={'/blogpost'} component={BlogPost}/>
             <Route path={'/privacy'} component={Privacy}/>
             <Route exact path={'/'} component={InfoSec}/>
