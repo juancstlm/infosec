@@ -4,19 +4,35 @@ import { Button, TextField, Form } from "ic-snacks";
 import Panel from "./components/Panel";
 import AWS from "aws-sdk";
 import { ToastContainer, toast } from "react-toastify";
+import QuillDeltaToHtmlConverter from 'quill-delta-to-html'
 import "react-toastify/dist/ReactToastify.css";
 import './stylesheets/demosql.css'
+import {DynamoDB} from "aws-sdk/index"; // ES6
 
 var postid = '1526-172282-7746';
+var userPool
+var dynamodb
+var html
 
 class DemoSQL extends React.Component {
 	constructor() {
 		super();
-
+		this.setKeys()
 		this.state = {
 			username: "",
-			loggedIn: false
+			loggedIn: false,
+
+			//BLog post data
+				text: null,
+				title: null,
+				author:null,
+				date: null,
+				authorid: null,
+				previewimage: null,
+				mainimage: null,
 		};
+
+		this.getBlogPostData()
 	}
 
 	handleSubmitFakeLogIn = (model)=> {
@@ -53,7 +69,45 @@ class DemoSQL extends React.Component {
 				toast.success("Welcome " + data.Payload);
 			}
 		});
-	};
+	}
+
+	getBlogPostData(){
+    var params = {
+      Key: {
+        'postid': {S: postid}
+      },
+      TableName: "infosecblog"
+    };
+
+    dynamodb.getItem(params, (err, data)=>{
+      if(err){console.log(err);
+      }
+      else {
+        console.log('data', data)
+        var delta = JSON.parse(data.Item.text.S)
+        this.setState({
+          text: delta,
+          title: data.Item.title.S,
+          author:data.Item.author.S,
+          date: data.Item.date.S,
+          authorid: data.Item.authorid.S,
+          previewimage: data.Item.previewimage.S,
+          mainimage: data.Item.mainimage.S,
+          isLoaded:true,
+        })
+        console.log('delta', delta)
+        this.renderBlogText(delta)
+      }
+    })
+  }
+
+	renderBlogText=(delta)=>{
+    var blogText = document.getElementById('blog-text')
+    var cfg = {};
+    var converter = new QuillDeltaToHtmlConverter(delta.ops, cfg);
+    html = converter.convert();
+    blogText.innerHTML = html;
+  }
 
 	render() {
 		const backgroundImage = {
@@ -70,7 +124,8 @@ class DemoSQL extends React.Component {
 				</div>
 				<div className='demosql'>
 
-					<div>Content Goes Here</div>
+					<div id='blog-text'>
+					</div>
 					<div className='demosql_log-in-form'>
 						<Form onSubmit={this.handleSubmitFakeLogIn}>
 							<TextField
@@ -103,6 +158,15 @@ class DemoSQL extends React.Component {
 			</div>
 		);
 	}
+
+	setKeys(){
+	  dynamodb =  new DynamoDB({
+	    region: require('./credentials').region,
+	    credentials: {
+	      accessKeyId: require('./credentials').accessKeyId,
+	      secretAccessKey: require('./credentials').secretAccessKey,
+	    }})
+	  }
 }
 
 export default withRouter(DemoSQL);
