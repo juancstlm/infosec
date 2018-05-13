@@ -5,6 +5,9 @@ import Panel from "./components/Panel";
 import AWS from "aws-sdk";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import './stylesheets/demosql.css'
+
+var postid = '1526-172282-7746';
 
 class DemoSQL extends React.Component {
 	constructor() {
@@ -54,45 +57,48 @@ class DemoSQL extends React.Component {
 
 	render() {
 		const backgroundImage = {
-			backgroundImage: `url(https://cdn-images-1.medium.com/max/2000/1*ukLP0nmM8t3uq43Nk_rqcQ.jpeg)`
+			backgroundImage: `url(https://cdn-images-1.medium.com/max/1024/0*ErN7MyOU7wjQLSgM.jpg)`
 		};
 		return (
 			<div>
 				<div className="blog-post-image" style={backgroundImage}>
 					<div className="blog-post-post_details">
 						<div className="blog-post-title">
-							Encryption / Decryption
+							SQL Injection
 						</div>
 					</div>
 				</div>
-				<div>
-					<Form onSubmit={this.handleSubmitFakeLogIn}>
-						<TextField
-							floatingLabelText="Username"
-							name="username"
-							required
-							hintText="Enter your Username"
-							validations={{ isLength: { min: 0, max: 45 } }}
-							style={{ width: "94%", marginBottom: "1.5rem" }}
-						/>
-						<TextField
-							floatingLabelText="Password"
-							name="password"
-							required
-							hintText="Enter your password"
-							validations={{ isLength: { min: 0, max: 45 } }}
-							style={{ width: "94%", marginBottom: "1.5rem" }}
-						/>
-						<Button
-							type="submit"
-							snacksStyle="primary"
-							size="standard"
-						>
-							Log In
-						</Button>
-					</Form>
+				<div className='demosql'>
+
+					<div>Content Goes Here</div>
+					<div className='demosql_log-in-form'>
+						<Form onSubmit={this.handleSubmitFakeLogIn}>
+							<TextField
+								floatingLabelText="Username"
+								name="username"
+								required
+								hintText="Enter your Username"
+								validations={{ isLength: { min: 0, max: 45 } }}
+								style={{ width: "94%", marginBottom: "1.5rem" }}
+							/>
+							<TextField
+								floatingLabelText="Password"
+								name="password"
+								required
+								hintText="Enter your password"
+								validations={{ isLength: { min: 0, max: 45 } }}
+								style={{ width: "94%", marginBottom: "1.5rem" }}
+							/>
+							<Button
+								type="submit"
+								snacksStyle="primary"
+								size="standard"
+							>
+								Log In
+							</Button>
+						</Form>
+					</div>
 				</div>
-				SQL Injection
 				<ToastContainer />
 			</div>
 		);
