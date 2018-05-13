@@ -16,8 +16,8 @@ const Router = () => (
     <main>
       <Header/>
         <Switch>
+            <Route exact path={'/blogpost/1526-173239-8806'} component={Encryption}/>
             <Route exact path={'/blogpost/1526-172282-7746'} component={DemoSQL}/>
-            <Route path={'/encryption'} component={Encryption}/>
             <Route path={'/blogpost'} component={BlogPost}/>
             <Route path={'/privacy'} component={Privacy}/>
             <Route exact path={'/'} component={InfoSec}/>
