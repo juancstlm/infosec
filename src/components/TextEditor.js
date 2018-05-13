@@ -31,12 +31,14 @@ var options = {
         theme: 'snow'
 }
 
+var dynamodb
+
 export default class TextEditor extends React.Component{
 
 
     constructor(){
         super();
-
+        this.setKeys()
         this.state ={
             editMode: false,
         }
@@ -46,16 +48,6 @@ export default class TextEditor extends React.Component{
         var delta = editor.getContents()
         var data = JSON.stringify(delta)
         console.log('Submited data',data)
-
-
-        //Send to AWS Dynamo DB
-        var dynamodb = new DynamoDB({
-            region: require('../credentials').region,
-            credentials: {
-                accessKeyId: require('../credentials').accessKeyId,
-                secretAccessKey: require('../credentials').secretAccessKey,
-        }})
-
 
         var params = {
           ExpressionAttributeNames: {
@@ -116,6 +108,32 @@ export default class TextEditor extends React.Component{
                 </div>
             )
         }
+
+        setKeys(){
+          if(process.env.NODE_ENV === 'development'){
+            // userPool = new CognitoUserPool(require('../credentials').poolData);
+            dynamodb =  new DynamoDB({
+              region: 'us-east-1',
+              credentials: {
+                accessKeyId: require('../credentials').accessKeyId,
+                secretAccessKey: require('../credentials').secretAccessKey,
+              }})
+              // ReCAPTCHA_Site_Key = require("../credentials").ReCAPTCHA_Site_Key;
+            }
+            else {
+              // userPool = new CognitoUserPool({
+              //     UserPoolId : process.env.UserPoolId,
+              //     ClientId : process.env.ClientId
+              // })
+              dynamodb = new DynamoDB({
+                region: 'us-east-1',
+                credentials: {
+                  accessKeyId: process.env.accessKeyId,
+                  secretAccessKey: process.env.secretAccessKey
+                }})
+              // ReCAPTCHA_Site_Key = process.env.ReCAPTCHA_Site_Key;
+            }
+          }
 }
 
 TextEditor.propTypes={
