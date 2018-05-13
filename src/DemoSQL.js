@@ -3,17 +3,24 @@ import { withRouter } from "react-router-dom";
 import { Button, TextField, Form } from "ic-snacks";
 import Panel from "./components/Panel";
 import AWS from "aws-sdk";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class DemoSQL extends React.Component {
 	constructor() {
 		super();
+
+		this.state = {
+			username: "",
+			loggedIn: false
+		};
 	}
 
-	handleSubmitFakeLogIn = (model) => {
-		this.logIn(model.username, model.password)
+	handleSubmitFakeLogIn = (model)=> {
+		this.logIn(model.username, model.password);
 	};
 
-	logIn=(username, password)=> {
+	logIn = (username, password) => {
 		var lambda = new AWS.Lambda({
 			region: "us-west-1",
 			credentials: {
@@ -31,14 +38,19 @@ class DemoSQL extends React.Component {
 			LogType: "Tail",
 			Payload: JSON.stringify(payLoad)
 		};
+		var self = this;
 		lambda.invoke(params, function(err, data) {
-			if (err) console.log(err, err.stack);
+			if (err || data.FunctionError) {
+				toast.error("ERROR Unable to Authenticate");
+			}
 			// an error occurred
 			else {
-				console.log("Data from lambda", data);
+				self.setState({ loggedIn: true, username: data.PayLoad });
+				console.log("User", data);
+				toast.success("Welcome " + data.Payload);
 			}
 		});
-	}
+	};
 
 	render() {
 		const backgroundImage = {
@@ -71,12 +83,17 @@ class DemoSQL extends React.Component {
 							validations={{ isLength: { min: 0, max: 45 } }}
 							style={{ width: "94%", marginBottom: "1.5rem" }}
 						/>
-						<Button type='submit' snacksStyle="primary" size="standard">
-						Log In
+						<Button
+							type="submit"
+							snacksStyle="primary"
+							size="standard"
+						>
+							Log In
 						</Button>
 					</Form>
 				</div>
 				SQL Injection
+				<ToastContainer />
 			</div>
 		);
 	}
