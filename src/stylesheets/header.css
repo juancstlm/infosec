@@ -29,13 +29,6 @@
 .header-navigation{
   margin: 1.5rem;
 }
-a{
-  color: rgba(238,245,244,1);
-    border: 1px solid #6deeb9;
-    padding: 1rem 1rem 1.5rem 1rem;
-    text-decoration: none;
-    border-radius: .6rem .6rem 0 0;
-}
 .modal-open {
   overflow: hidden;
 }
