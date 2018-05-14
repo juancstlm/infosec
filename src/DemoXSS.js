@@ -37,7 +37,8 @@ class DemoXSS extends React.Component {
 	handleSubmitXSS = (model)=> {
 		const location = {
 			pathname: '/fakeblogpost/' + model.title,
-			state: { postTitle: model.title}
+			state: { postTitle: model.title,
+							author: model.author}
 		}
 		this.props.history.push(location)
 	};
@@ -97,6 +98,7 @@ class DemoXSS extends React.Component {
 					<div id='blog-text'>
 					</div>
 					<div className='demosql_log-in-form'>
+						<h2>Create A New Fake New Post</h2>
 						<Form onSubmit={this.handleSubmitXSS}>
 							<TextField
 								floatingLabelText="Blog Title"
@@ -105,12 +107,19 @@ class DemoXSS extends React.Component {
 								hintText="Enter the blog title"
 								style={{ width: "94%", marginBottom: "1.5rem" }}
 							/>
+							<TextField
+								floatingLabelText="Author"
+								name="author"
+								required
+								hintText="Enter the blog author"
+								style={{ width: "94%", marginBottom: "1.5rem" }}
+							/>
 							<Button
 								type="submit"
 								snacksStyle="primary"
 								size="standard"
 							>
-								Search
+								Create Blog Post
 							</Button>
 						</Form>
 					</div>

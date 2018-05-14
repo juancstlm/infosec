@@ -5,11 +5,3 @@
 .demosql_log-in-form{
   margin: 4rem 10%;
 }
-pre{
-  background: #2f3a49;
-  color: #6ceeba;
-  padding: 1rem;
-  border-radius: .6rem;
-  font-size: 2rem;
-  overflow: auto;
-}

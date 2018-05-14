@@ -18,7 +18,7 @@ const Router = () => (
     <main>
       <Header/>
         <Switch>
-            <Route path={'/fakeblogpost'} component={FakeBlogPost}/>
+            <Route path={'/fakeblogpost/:title'} component={FakeBlogPost}/>
             <Route exact path={'/blogpost/1526-268861-1917'} component={DemoXSS}/>
             <Route exact path={'/blogpost/1526-173239-8806'} component={Encryption}/>
             <Route exact path={'/blogpost/1526-172282-7746'} component={DemoSQL}/>

@@ -7,8 +7,11 @@ class FakeBlogPost extends React.Component{
     super();
 
     console.log(location);
+    console.log(match);
+    console.log(history);
       this.state ={
         html: location.state.postTitle,
+        author: location.state.author
       }
   }
 
@@ -33,17 +36,12 @@ class FakeBlogPost extends React.Component{
                 </div>
               <div>
                 <span className='blog-post-author'>Author: {this.state.author} | </span>
-                <span className='blog-post-author'>Published On {this.state.date}</span>
+                <span className='blog-post-author'>Published On {new Date().toUTCString()}</span>
               </div>
             </div>
-          </div>
-          <div className='blog-post-content'>
-            <div id='blog-text'>
-            </div>
-            <hr></hr>
-          </div>
         </div>
       </div>
+    </div>
     )
   }
 }
