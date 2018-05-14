@@ -8,8 +8,8 @@ import Header from "./components/Header";
 
 const Last = require("./text/privacy/Last.txt");
 const Info = require("./text/privacy/Info.txt");
-const How = require("./text/privacy/How.txt");
-const What = require("./text/privacy/What.txt");
+const Service = require("./text/privacy/Service.txt");
+const Security = require("./text/privacy/Security.txt");
 const Changes = require("./text/privacy/Changes.txt");
 const Cali = require("./text/privacy/California.txt");
 
@@ -41,16 +41,16 @@ class Privacy extends Component {
 
                         <div className='privacy-divBorderW'>
                             <div className='privacy-div_spacing'>
-                                <h3 className='privacy-heading'>How we use your information</h3>
-                                <TextFileReader txt={How}/>
+                                <h3 className='privacy-heading'>Service Providers</h3>
+                                <TextFileReader txt={Service}/>
                             </div>
                         </div>
 
 
                         <div className='privacy-divBorderG'>
                             <div className='privacy-div_spacing'>
-                                <h3 className='privacy-heading'>What We Share</h3>
-                                <TextFileReader txt={What}/>
+                                <h3 className='privacy-heading'>Security</h3>
+                                <TextFileReader txt={Security}/>
                             </div>
                         </div>
 
@@ -60,14 +60,6 @@ class Privacy extends Component {
                                 <TextFileReader txt={Changes}/>
                             </div>
                         </div>
-
-                        <div className='privacy-divBorderG'>
-                            <div className='privacy-div_spacing'>
-                                <h3 className='privacy-heading'>For Californian Residents</h3>
-                                <TextFileReader txt={Cali}/>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>

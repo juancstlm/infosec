@@ -20,3 +20,21 @@ html {
   font-size: 62.5%;
   box-sizing: border-box;
 }
+blockquote{
+  color: white;
+    background-color: #2f3a49;
+    border-radius: .6rem;
+    padding: 1em;
+    white-space: pre-wrap;
+    font-family: monospace,Courier;
+    line-height: 1.3em;
+}
+pre{
+  background: #2f3a49;
+  color: white;
+  padding: 1rem;
+  border-radius: .6rem;
+  font-size: 2rem;
+  overflow: auto;
+  white-space: pre-wrap;
+}

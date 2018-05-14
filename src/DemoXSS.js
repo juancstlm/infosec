@@ -9,11 +9,11 @@ import "react-toastify/dist/ReactToastify.css";
 import './stylesheets/demosql.css'
 import {DynamoDB} from "aws-sdk/index"; // ES6
 
-var postid = '1526-172282-7746';
+var postid = '1526-268861-1917';
 var dynamodb
 var html
 
-class DemoSQL extends React.Component {
+class DemoXSS extends React.Component {
 	constructor() {
 		super();
 		this.setKeys()
@@ -34,41 +34,14 @@ class DemoSQL extends React.Component {
 		this.getBlogPostData()
 	}
 
-	handleSubmitFakeLogIn = (model)=> {
-		this.logIn(model.username, model.password);
+	handleSubmitXSS = (model)=> {
+		const location = {
+			pathname: '/fakeblogpost/' + model.title,
+			state: { postTitle: model.title,
+							author: model.author}
+		}
+		this.props.history.push(location)
 	};
-
-	logIn = (username, password) => {
-		var lambda = new AWS.Lambda({
-			region: "us-west-1",
-			credentials: {
-				accessKeyId: require("./credentials").accessKeyId,
-				secretAccessKey: require("./credentials").secretAccessKey
-			}
-		});
-		var payLoad = {
-			username: username,
-			password: password
-		};
-
-		var params = {
-			FunctionName: "authenticate-sql-injection-demo",
-			LogType: "Tail",
-			Payload: JSON.stringify(payLoad)
-		};
-		var self = this;
-		lambda.invoke(params, function(err, data) {
-			if (err || data.FunctionError) {
-				toast.error("ERROR Unable to Authenticate");
-			}
-			// an error occurred
-			else {
-				self.setState({ loggedIn: true, username: data.PayLoad });
-				console.log("User", data);
-				toast.success("Welcome " + data.Payload);
-			}
-		});
-	}
 
 	getBlogPostData(){
     var params = {
@@ -110,37 +83,35 @@ class DemoSQL extends React.Component {
 
 	render() {
 		const backgroundImage = {
-			backgroundImage: `url(https://cdn-images-1.medium.com/max/1024/0*ErN7MyOU7wjQLSgM.jpg)`
+			backgroundImage: `url(https://cdn-images-1.medium.com/max/1500/1*JN5atqW0tbV9y0JYFtb32Q.jpeg)`
 		};
 		return (
 			<div>
 				<div className="blog-post-image" style={backgroundImage}>
 					<div className="blog-post-post_details">
 						<div className="blog-post-title">
-							SQL Injection
+							Cross Site Scripting
 						</div>
 					</div>
 				</div>
 				<div className='demosql'>
-					<img style={{width: '100%'}} data-src="https://cdn-images-1.medium.com/max/800/1*P4nj9fJjSeJ9-c0rwSZqlg.png" src="https://cdn-images-1.medium.com/max/800/1*P4nj9fJjSeJ9-c0rwSZqlg.png"/>
 					<div id='blog-text'>
 					</div>
 					<div className='demosql_log-in-form'>
-						<Form onSubmit={this.handleSubmitFakeLogIn}>
+						<h2>Create A New Fake New Post</h2>
+						<Form onSubmit={this.handleSubmitXSS}>
 							<TextField
-								floatingLabelText="Username"
-								name="username"
+								floatingLabelText="Blog Title"
+								name="title"
 								required
-								hintText="Enter your Username"
-								validations={{ isLength: { min: 0, max: 45 } }}
+								hintText="Enter the blog title"
 								style={{ width: "94%", marginBottom: "1.5rem" }}
 							/>
 							<TextField
-								floatingLabelText="Password"
-								name="password"
+								floatingLabelText="Author"
+								name="author"
 								required
-								hintText="Enter your password"
-								validations={{ isLength: { min: 0, max: 45 } }}
+								hintText="Enter the blog author"
 								style={{ width: "94%", marginBottom: "1.5rem" }}
 							/>
 							<Button
@@ -148,7 +119,7 @@ class DemoSQL extends React.Component {
 								snacksStyle="primary"
 								size="standard"
 							>
-								Log In
+								Create Blog Post
 							</Button>
 						</Form>
 					</div>
@@ -185,4 +156,4 @@ class DemoSQL extends React.Component {
     }
 }
 
-export default withRouter(DemoSQL);
+export default withRouter(DemoXSS);
