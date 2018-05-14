@@ -73,6 +73,14 @@ class DemoXSS extends React.Component {
     })
   }
 
+	renderBlogText=(delta)=>{
+    var blogText = document.getElementById('blog-text')
+    var cfg = {};
+    var converter = new QuillDeltaToHtmlConverter(delta.ops, cfg);
+    html = converter.convert();
+    blogText.innerHTML = html;
+  }
+
 	render() {
 		const backgroundImage = {
 			backgroundImage: `url(https://cdn-images-1.medium.com/max/1500/1*JN5atqW0tbV9y0JYFtb32Q.jpeg)`
