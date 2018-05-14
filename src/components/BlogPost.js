@@ -249,14 +249,14 @@ setKeys(){
     }
     else {
       userPool = new CognitoUserPool({
-          UserPoolId : process.env.UserPoolId,
-          ClientId : process.env.ClientId
+          UserPoolId : process.env.REACT_APP_USERPOOL_ID,
+          ClientId : process.env.REACT_APP_CLIENT_ID
       })
       dynamodb = new DynamoDB({
         region: 'us-east-1',
         credentials: {
-          accessKeyId: process.env.accessKeyId,
-          secretAccessKey: process.env.secretAccessKey
+          accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+          secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY
         }})
     }
   }

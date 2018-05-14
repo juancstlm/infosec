@@ -148,10 +148,10 @@ class DemoXSS extends React.Component {
         dynamodb = new DynamoDB({
           region: 'us-east-1',
           credentials: {
-            accessKeyId: process.env.accessKeyId,
-            secretAccessKey: process.env.secretAccessKey
+            accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+            secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY
           }})
-        // ReCAPTCHA_Site_Key = process.env.ReCAPTCHA_Site_Key;
+        // ReCAPTCHA_Site_Key = process.env.REACT_APP_RECAPTHCA_SITE_KEY;
       }
     }
 }
