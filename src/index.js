@@ -7,7 +7,6 @@ import {BrowserRouter} from "react-router-dom";
 import {StyleRoot} from "radium";
 import {themer} from 'ic-snacks';
 import {theme} from './theme'
-import Header from './components/Header'
 
 themer.themeConfig = theme; //IC-Snacks theme for WeMart
 

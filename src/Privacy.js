@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import Footer from "./components/Footer.js"
 import {withRouter} from "react-router-dom";
 import TextFileReader from "./components/TextFileReader";
-
 import './stylesheets/privacy.css'
-import Header from "./components/Header";
 
 const Last = require("./text/privacy/Last.txt");
 const Info = require("./text/privacy/Info.txt");
 const Service = require("./text/privacy/Service.txt");
 const Security = require("./text/privacy/Security.txt");
 const Changes = require("./text/privacy/Changes.txt");
-const Cali = require("./text/privacy/California.txt");
 
 class Privacy extends Component {
 

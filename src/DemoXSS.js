@@ -1,11 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { Button, TextField, Form } from "ic-snacks";
-import Panel from "./components/Panel";
-import AWS from "aws-sdk";
-import { ToastContainer, toast } from "react-toastify";
 import QuillDeltaToHtmlConverter from 'quill-delta-to-html'
-import "react-toastify/dist/ReactToastify.css";
 import './stylesheets/demosql.css'
 import {DynamoDB} from "aws-sdk/index"; // ES6
 
@@ -124,7 +120,6 @@ class DemoXSS extends React.Component {
 						</Form>
 					</div>
 				</div>
-				<ToastContainer />
 			</div>
 		);
 	}

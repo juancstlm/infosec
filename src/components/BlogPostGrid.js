@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types';
 import BlogPostCard from './BlogPostCard'
 import {DynamoDB} from "aws-sdk";
 
