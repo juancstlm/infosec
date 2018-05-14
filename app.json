@@ -1,5 +1,32 @@
 {
   "name": "infosec",
+  "scripts": {
+  },
+  "env": {
+    "accessKeyId": {
+      "required": true
+    },
+    "ClientId": {
+      "required": true
+    },
+    "ReCAPTCHA_Site_Key": {
+      "required": true
+    },
+    "secretAccessKey": {
+      "required": true
+    },
+    "UserPoolId": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+
+  ],
   "buildpacks": [
     {
       "url": "https://github.com/mars/create-react-app-buildpack"
