@@ -559,7 +559,7 @@ class Header extends React.Component {
   }
 
   setKeys(){
-    console.log('process env',process.env)
+    console.log('process env',process.env.GITHUB_USERNAME)
     if(process.env.NODE_ENV === 'development'){
       userPool = new CognitoUserPool(require('../credentials').poolData);
       dynamodb =  new DynamoDB({
