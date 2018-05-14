@@ -181,7 +181,7 @@ class DemoSQL extends React.Component {
             accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
             secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY
           }})
-					var lambda = new AWS.Lambda({
+				lambda = new AWS.Lambda({
 						region: "us-west-1",
 						credentials: {
 							accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
