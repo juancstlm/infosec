@@ -159,7 +159,7 @@ class DemoSQL extends React.Component {
 	}
 
 	setKeys(){
-    if(process.env.NODE_ENV === 'development' || true){
+    if(process.env.NODE_ENV === 'development'){
       // userPool = new CognitoUserPool(require('./credentials').poolData);
       dynamodb =  new DynamoDB({
         region: 'us-east-1',

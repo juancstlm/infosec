@@ -43,8 +43,8 @@ class Header extends React.Component {
       signInModal: false,
       newPostModal: false,
 
-      //CAPTCHA
-      isNotRobot: false, //assume everyone is a robot until proven otherwise
+      //CAPTCHA //TODO change to false for release
+      isNotRobot: true, //assume everyone is a robot until proven otherwise
 
       singUpSuccess: false,
 
@@ -499,7 +499,7 @@ class Header extends React.Component {
             </Button>}>
           <MenuItem style={{ color: "#2F3A49"}}
             disabled
-            label={`Welcome ${this.state.username}`}
+            label={this.state.username}
             value=''>
           </MenuItem>
           <MenuItem
@@ -559,7 +559,8 @@ class Header extends React.Component {
   }
 
   setKeys(){
-    if(process.env.NODE_ENV === 'development' ||  true){
+    console.log('process env',process.env)
+    if(process.env.NODE_ENV === 'development'){
       userPool = new CognitoUserPool(require('../credentials').poolData);
       dynamodb =  new DynamoDB({
         region: 'us-east-1',

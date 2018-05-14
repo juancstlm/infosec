@@ -53,34 +53,34 @@ export default class BlogPostGrid extends React.Component{
   }
 
   setKeys(){
-    dynamodb =  new DynamoDB({
-        region: 'us-east-1',
-        credentials: {
-          accessKeyId: require('../credentials').accessKeyId,
-          secretAccessKey: require('../credentials').secretAccessKey,
-        }})
-    // if(process.env.NODE_ENV === 'development'){
-    //   // userPool = new CognitoUserPool(require('../credentials').poolData);
-    //   dynamodb =  new DynamoDB({
+    // dynamodb =  new DynamoDB({
     //     region: 'us-east-1',
     //     credentials: {
     //       accessKeyId: require('../credentials').accessKeyId,
     //       secretAccessKey: require('../credentials').secretAccessKey,
     //     }})
-    //     // ReCAPTCHA_Site_Key = require("../credentials").ReCAPTCHA_Site_Key;
-    //   }
-    //   else {
-    //     // userPool = new CognitoUserPool({
-    //     //     UserPoolId : process.env.UserPoolId,
-    //     //     ClientId : process.env.ClientId
-    //     // })
-    //     dynamodb = new DynamoDB({
-    //       region: 'us-east-1',
-    //       credentials: {
-    //         accessKeyId: process.env.accessKeyId,
-    //         secretAccessKey: process.env.secretAccessKey
-    //       }})
-    //     // ReCAPTCHA_Site_Key = process.env.ReCAPTCHA_Site_Key;
-    //   }
+    if(process.env.NODE_ENV === 'development'){
+      // userPool = new CognitoUserPool(require('../credentials').poolData);
+      dynamodb =  new DynamoDB({
+        region: 'us-east-1',
+        credentials: {
+          accessKeyId: require('../credentials').accessKeyId,
+          secretAccessKey: require('../credentials').secretAccessKey,
+        }})
+        // ReCAPTCHA_Site_Key = require("../credentials").ReCAPTCHA_Site_Key;
+      }
+      else {
+        // userPool = new CognitoUserPool({
+        //     UserPoolId : process.env.UserPoolId,
+        //     ClientId : process.env.ClientId
+        // })
+        dynamodb = new DynamoDB({
+          region: 'us-east-1',
+          credentials: {
+            accessKeyId: process.env.accessKeyId,
+            secretAccessKey: process.env.secretAccessKey
+          }})
+        // ReCAPTCHA_Site_Key = process.env.ReCAPTCHA_Site_Key;
+      }
     }
   }
