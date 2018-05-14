@@ -64,26 +64,26 @@ class BlogPostCard extends React.Component{
             </div>
         )
     }
+    setKeys(){
+      if(process.env.NODE_ENV === 'development'){
+        dynamodb =  new DynamoDB({
+          region: 'us-east-1',
+          credentials: {
+            accessKeyId: require('../credentials').accessKeyId,
+            secretAccessKey: require('../credentials').secretAccessKey,
+          }})
+        }
+        else {
+          dynamodb = new DynamoDB({
+            region: 'us-east-1',
+            credentials: {
+              accessKeyId: process.env.accessKeyId,
+              secretAccessKey: process.env.secretAccessKey
+            }})
+        }
+      }
 }
 
-setKeys(){
-  if(process.env.NODE_ENV === 'development'){
-    dynamodb =  new DynamoDB({
-      region: 'us-east-1',
-      credentials: {
-        accessKeyId: require('../credentials').accessKeyId,
-        secretAccessKey: require('../credentials').secretAccessKey,
-      }})
-    }
-    else {
-      dynamodb = new DynamoDB({
-        region: 'us-east-1',
-        credentials: {
-          accessKeyId: process.env.accessKeyId,
-          secretAccessKey: process.env.secretAccessKey
-        }})
-    }
-  }
 export default withRouter(BlogPostCard)
 
 BlogPostCard.propTypes={

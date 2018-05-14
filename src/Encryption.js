@@ -252,8 +252,8 @@ class Encryption extends React.Component {
       dynamodb =  new DynamoDB({
         region: 'us-east-1',
         credentials: {
-          accessKeyId: require('../credentials').accessKeyId,
-          secretAccessKey: require('../credentials').secretAccessKey,
+          accessKeyId: require('./credentials').accessKeyId,
+          secretAccessKey: require('./credentials').secretAccessKey,
         }})
         // ReCAPTCHA_Site_Key = require("../credentials").ReCAPTCHA_Site_Key;
       }
