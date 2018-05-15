@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import {DynamoDB} from "aws-sdk/index"; // ES6
 import {withRouter} from "react-router-dom";
 
+var dynamodb
+
 class BlogPostCard extends React.Component{
     constructor(){
         super()
 
+        this.setKeys()
         this.state = {
             previewimage: null,
             title: null,
@@ -18,12 +21,6 @@ class BlogPostCard extends React.Component{
     }
 
     getBlogPostData(){
-        var dynamodb = new DynamoDB({
-            region: require('../credentials').region,
-            credentials: {
-                accessKeyId: require('../credentials').accessKeyId,
-                secretAccessKey: require('../credentials').secretAccessKey,
-            }})
             var params = {
                 Key: {
                     'postid': {S: this.props.postid}
@@ -67,7 +64,26 @@ class BlogPostCard extends React.Component{
             </div>
         )
     }
+    setKeys(){
+      if(process.env.NODE_ENV === 'development'){
+        dynamodb =  new DynamoDB({
+          region: 'us-east-1',
+          credentials: {
+            accessKeyId: require('../credentials').accessKeyId,
+            secretAccessKey: require('../credentials').secretAccessKey,
+          }})
+        }
+        else {
+          dynamodb = new DynamoDB({
+            region: 'us-east-1',
+            credentials: {
+              accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+              secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY
+            }})
+        }
+      }
 }
+
 export default withRouter(BlogPostCard)
 
 BlogPostCard.propTypes={

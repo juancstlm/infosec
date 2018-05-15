@@ -43,8 +43,8 @@ class Header extends React.Component {
       signInModal: false,
       newPostModal: false,
 
-      //CAPTCHA
-      isNotRobot: false, //assume everyone is a robot until proven otherwise
+      //CAPTCHA //TODO change to false for release
+      isNotRobot: true, //assume everyone is a robot until proven otherwise
 
       singUpSuccess: false,
 
@@ -499,7 +499,7 @@ class Header extends React.Component {
             </Button>}>
           <MenuItem style={{ color: "#2F3A49"}}
             disabled
-            label={`Welcome ${this.state.username}`}
+            label={this.state.username}
             value=''>
           </MenuItem>
           <MenuItem
@@ -559,7 +559,7 @@ class Header extends React.Component {
   }
 
   setKeys(){
-    if(process.env.NODE_ENV === 'development' ||  true){
+    if(process.env.NODE_ENV === 'development'){
       userPool = new CognitoUserPool(require('../credentials').poolData);
       dynamodb =  new DynamoDB({
         region: 'us-east-1',
@@ -571,16 +571,16 @@ class Header extends React.Component {
       }
       else {
         userPool = new CognitoUserPool({
-            UserPoolId : process.env.UserPoolId,
-            ClientId : process.env.ClientId
+            UserPoolId : process.env.REACT_APP_USERPOOL_ID,
+            ClientId : process.env.REACT_APP_CLIENT_ID
         })
         dynamodb = new DynamoDB({
           region: 'us-east-1',
           credentials: {
-            accessKeyId: process.env.accessKeyId,
-            secretAccessKey: process.env.secretAccessKey
+            accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+            secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY
           }})
-        ReCAPTCHA_Site_Key = process.env.ReCAPTCHA_Site_Key;
+        ReCAPTCHA_Site_Key = process.env.REACT_APP_RECAPTHCA_SITE_KEY;
       }
     }
 

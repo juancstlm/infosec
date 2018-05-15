@@ -25,3 +25,5 @@ yarn-error.log*
 src/credentials\.js
 
 \.vscode/
+
+app\.json\.bak

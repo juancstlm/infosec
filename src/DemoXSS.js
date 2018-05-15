@@ -1,11 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { Button, TextField, Form } from "ic-snacks";
-import Panel from "./components/Panel";
-import AWS from "aws-sdk";
-import { ToastContainer, toast } from "react-toastify";
 import QuillDeltaToHtmlConverter from 'quill-delta-to-html'
-import "react-toastify/dist/ReactToastify.css";
 import './stylesheets/demosql.css'
 import {DynamoDB} from "aws-sdk/index"; // ES6
 
@@ -73,6 +69,14 @@ class DemoXSS extends React.Component {
     })
   }
 
+	renderBlogText=(delta)=>{
+    var blogText = document.getElementById('blog-text')
+    var cfg = {};
+    var converter = new QuillDeltaToHtmlConverter(delta.ops, cfg);
+    html = converter.convert();
+    blogText.innerHTML = html;
+  }
+
 	render() {
 		const backgroundImage = {
 			backgroundImage: `url(https://cdn-images-1.medium.com/max/1500/1*JN5atqW0tbV9y0JYFtb32Q.jpeg)`
@@ -116,13 +120,12 @@ class DemoXSS extends React.Component {
 						</Form>
 					</div>
 				</div>
-				<ToastContainer />
 			</div>
 		);
 	}
 
 	setKeys(){
-    if(process.env.NODE_ENV === 'development' || true){
+    if(process.env.NODE_ENV === 'development'){
       // userPool = new CognitoUserPool(require('./credentials').poolData);
       dynamodb =  new DynamoDB({
         region: 'us-east-1',
@@ -140,10 +143,10 @@ class DemoXSS extends React.Component {
         dynamodb = new DynamoDB({
           region: 'us-east-1',
           credentials: {
-            accessKeyId: process.env.accessKeyId,
-            secretAccessKey: process.env.secretAccessKey
+            accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+            secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY
           }})
-        // ReCAPTCHA_Site_Key = process.env.ReCAPTCHA_Site_Key;
+        // ReCAPTCHA_Site_Key = process.env.REACT_APP_RECAPTHCA_SITE_KEY;
       }
     }
 }

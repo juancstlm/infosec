@@ -247,12 +247,29 @@ class Encryption extends React.Component {
   }
 
   setKeys(){
-    dynamodb =  new DynamoDB({
-      region: require('./credentials').region,
-      credentials: {
-        accessKeyId: require('./credentials').accessKeyId,
-        secretAccessKey: require('./credentials').secretAccessKey,
-      }})
+    if(process.env.NODE_ENV === 'development'){
+      // userPool = new CognitoUserPool(require('../credentials').poolData);
+      dynamodb =  new DynamoDB({
+        region: 'us-east-1',
+        credentials: {
+          accessKeyId: require('./credentials').accessKeyId,
+          secretAccessKey: require('./credentials').secretAccessKey,
+        }})
+        // ReCAPTCHA_Site_Key = require("../credentials").ReCAPTCHA_Site_Key;
+      }
+      else {
+        // userPool = new CognitoUserPool({
+        //     UserPoolId : process.env.UserPoolId,
+        //     ClientId : process.env.ClientId
+        // })
+        dynamodb = new DynamoDB({
+          region: 'us-east-1',
+          credentials: {
+            accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+            secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY
+          }})
+        // ReCAPTCHA_Site_Key = process.env.ReCAPTCHA_Site_Key;
+      }
     }
 }
 export default withRouter(Encryption);

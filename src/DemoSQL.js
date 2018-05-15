@@ -1,7 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { Button, TextField, Form } from "ic-snacks";
-import Panel from "./components/Panel";
 import AWS from "aws-sdk";
 import { ToastContainer, toast } from "react-toastify";
 import QuillDeltaToHtmlConverter from 'quill-delta-to-html'
@@ -11,6 +10,7 @@ import {DynamoDB} from "aws-sdk/index"; // ES6
 
 var postid = '1526-172282-7746';
 var dynamodb
+var lambda
 var html
 
 class DemoSQL extends React.Component {
@@ -39,13 +39,6 @@ class DemoSQL extends React.Component {
 	};
 
 	logIn = (username, password) => {
-		var lambda = new AWS.Lambda({
-			region: "us-west-1",
-			credentials: {
-				accessKeyId: require("./credentials").accessKeyId,
-				secretAccessKey: require("./credentials").secretAccessKey
-			}
-		});
 		var payLoad = {
 			username: username,
 			password: password
@@ -159,7 +152,7 @@ class DemoSQL extends React.Component {
 	}
 
 	setKeys(){
-    if(process.env.NODE_ENV === 'development' || true){
+    if(process.env.NODE_ENV === 'development'){
       // userPool = new CognitoUserPool(require('./credentials').poolData);
       dynamodb =  new DynamoDB({
         region: 'us-east-1',
@@ -167,6 +160,13 @@ class DemoSQL extends React.Component {
           accessKeyId: require('./credentials').accessKeyId,
           secretAccessKey: require('./credentials').secretAccessKey,
         }})
+				lambda = new AWS.Lambda({
+					region: "us-west-1",
+					credentials: {
+						accessKeyId: require("./credentials").accessKeyId,
+						secretAccessKey: require("./credentials").secretAccessKey
+					}
+				});
         // ReCAPTCHA_Site_Key = require("../credentials").ReCAPTCHA_Site_Key;
       }
       else {
@@ -177,9 +177,16 @@ class DemoSQL extends React.Component {
         dynamodb = new DynamoDB({
           region: 'us-east-1',
           credentials: {
-            accessKeyId: process.env.accessKeyId,
-            secretAccessKey: process.env.secretAccessKey
+            accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+            secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY
           }})
+				lambda = new AWS.Lambda({
+						region: "us-west-1",
+						credentials: {
+							accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+							secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY
+						}
+					});
         // ReCAPTCHA_Site_Key = process.env.ReCAPTCHA_Site_Key;
       }
     }
